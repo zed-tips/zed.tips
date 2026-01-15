@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1d4ed8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer rounded square frames -->
+  <rect x="60" y="60" width="392" height="392" rx="48" fill="none" stroke="url(#blueGradient)" stroke-width="40"/>
+
+  <!-- Middle frame -->
+  <rect x="120" y="120" width="272" height="272" rx="32" fill="none" stroke="url(#blueGradient)" stroke-width="32"/>
+
+  <!-- Inner frame with Z -->
+  <rect x="180" y="180" width="152" height="152" rx="16" fill="none" stroke="url(#blueGradient)" stroke-width="28"/>
+
+  <!-- Diagonal slash across all frames -->
+  <line x1="100" y1="412" x2="412" y2="100" stroke="url(#blueGradient)" stroke-width="48" stroke-linecap="round"/>
+
+  <!-- Light bulb icon -->
+  <g transform="translate(360, 200)">
+    <!-- Bulb -->
+    <circle cx="20" cy="20" r="18" fill="url(#blueGradient)"/>
+    <path d="M 10 12 Q 12 8 16 8 Q 20 8 22 12" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Base -->
+    <rect x="14" y="36" width="12" height="6" rx="2" fill="url(#blueGradient)"/>
+    <rect x="16" y="42" width="8" height="3" rx="1" fill="url(#blueGradient)"/>
+  </g>
+</svg>
