@@ -3,8 +3,6 @@ name: Validate Tips
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'tips/**/*.{md,mdx}'
   workflow_dispatch:
 
 permissions:
