@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
-pnpm-lock.yaml
+# pnpm-lock.yaml should be committed for reproducible installs
+# pnpm-lock.yaml
 yarn.lock
 package-lock.json
 
