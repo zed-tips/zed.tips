@@ -1,14 +1,20 @@
 ---
-title: "Invalid Test Tip"
-subtitle: "This tip is intentionally invalid"
+title: "Valid Test Tip"
+subtitle: "This tip is now valid and should pass CI validation"
 category: "testing"
-# 缺少 difficulty 字段
-tags: ["test"]
-# 缺少 mediaType 字段
-# 缺少 mediaUrl 字段
-# 缺少 publishedAt 字段
+difficulty: "beginner"
+tags: ["test", "validation"]
+mediaType: "image"
+mediaUrl: "https://zed.tips/debugger.webp"
+publishedAt: 2025-01-15
 ---
 
-This is a test tip with missing required fields.
+## How to Use
 
-It should fail CI validation.
+This is a valid test tip that passes all CI validation checks.
+
+## Pro Tips
+
+- All required fields are present
+- Data types are correct
+- This demonstrates the CI system working properly
