@@ -10,7 +10,30 @@ permissions:
   pull-requests: read
 
 jobs:
+  detect-changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      tips-changed: ${{ steps.check-tips.outputs.tips-changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if tips files changed
+        id: check-tips
+        run: |
+          if git diff --name-only origin/main...HEAD | grep -q "^tips/.*\.\(md\|mdx\)$"; then
+            echo "tips-changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "tips-changed=false" >> $GITHUB_OUTPUT
+          fi
+
   validate:
+    name: Validate tips format
+    needs: detect-changes
+    if: needs.detect-changes.outputs.tips-changed == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
