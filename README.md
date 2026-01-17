@@ -1,243 +1,306 @@
-# Zed Tips Data 🎉
+# Zed Tips Data
 
-社区贡献的 Zed 编辑器使用技巧数据库。
+Community-contributed tips and tricks for the Zed editor.
 
-## 🚀 快速开始
+## Overview
 
-### 本项目的作用
+This repository hosts a curated collection of user tips for the Zed editor. Each tip is a standalone MDX file containing actionable advice, keyboard shortcuts, workflow optimizations, and best practices.
 
-这个仓库存储所有社区贡献的 Zed 编辑器 Tips。当你提交 PR 时：
+When you submit a tip via pull request:
 
-1. **PR 时自动验证** ✅
-   - 检查文件格式和必须字段
-   - 验证数据类型和值
-   - 失败时 PR 显示红色 ❌
+1. **Automatic Validation** - CI automatically validates the tip format
+2. **Quality Assurance** - Required fields and data types are checked
+3. **Auto-deployment** - Upon merge, changes are automatically deployed to [zed.tips](https://zed.tips)
 
-2. **Merge 后自动部署** 🚀
-   - 自动触发 zed.tips 网站重建
-   - 克隆最新数据
-   - 自动部署到 https://zed.tips
+## Quick Start
 
-### 提交新 Tip 的步骤
+### Add a New Tip
 
-```bash
-# 1. 创建分支
-git checkout -b feature/my-tip
+1. **Create a new branch:**
+   ```bash
+   git checkout -b feature/my-tip
+   ```
 
-# 2. 创建 tip 文件 (遵循 kebab-case)
-cat > tips/my-awesome-tip.mdx << 'EOF'
+2. **Create a tip file** (use kebab-case naming):
+   ```bash
+   cat > tips/keyboard-shortcuts-basics.mdx << 'EOF'
+   ---
+   title: "Essential Keyboard Shortcuts"
+   subtitle: "Master the most commonly used Zed shortcuts"
+   category: "shortcuts"
+   difficulty: "beginner"
+   tags: ["keyboard", "productivity"]
+   mediaType: "image"
+   mediaUrl: "https://example.com/image.png"
+   publishedAt: 2025-01-15
+   ---
+   
+   ## How to Use
+   
+   Learn the essential keyboard shortcuts that will boost your productivity.
+   
+   ## Pro Tips
+   
+   - Customize shortcuts in your keybindings.json
+   - Use Cmd+K Cmd+S to open the keyboard shortcuts reference
+   EOF
+   ```
+
+3. **Commit and push:**
+   ```bash
+   git add tips/keyboard-shortcuts-basics.mdx
+   git commit -m "feat: add essential keyboard shortcuts tip"
+   git push origin feature/my-tip
+   ```
+
+4. **Create a Pull Request** on GitHub
+
+5. **Wait for CI validation** - GitHub Actions will automatically validate your tip
+
+6. **Merge once approved** - Validation must pass before merging
+
+7. **Auto-deployment** - Changes are automatically deployed to the website
+
+## Tip Format Specification
+
+### Required Fields
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `title` | string | Tip title | `"Quick File Navigation"` |
+| `subtitle` | string | Brief description | `"Navigate files faster with Cmd+P"` |
+| `category` | string | Topic category | `"navigation"`, `"shortcuts"` |
+| `difficulty` | string | Skill level required | `"beginner"`, `"intermediate"`, `"advanced"` |
+| `tags` | array | Keywords for discovery (1-10 items) | `["keyboard", "workflow"]` |
+| `mediaType` | enum | `"image"` or `"video"` | `"image"` |
+| `mediaUrl` | string | Valid URL to media asset | `"https://example.com/image.png"` |
+| `publishedAt` | date | Publication date (YYYY-MM-DD) | `"2025-01-15"` |
+
+### Optional Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `updatedAt` | date | Last update date (YYYY-MM-DD) |
+| `featured` | boolean | Display on homepage |
+| `newInMonth` | date | When feature was released (YYYY-MM-DD) |
+
+### Example Tip
+
+```yaml
 ---
-title: "My Awesome Tip"
-subtitle: "A helpful description"
+title: "Smart Code Navigation"
+subtitle: "Jump to definitions and symbols instantly"
 category: "navigation"
 difficulty: "beginner"
-tags: ["keyboard", "workflow"]
+tags: ["shortcuts", "code-navigation", "productivity"]
 mediaType: "image"
-mediaUrl: "https://example.com/image.png"
-publishedAt: 2025-01-15
----
-
-## How to Use
-
-Your content here...
-EOF
-
-# 3. 提交并推送
-git add tips/my-awesome-tip.mdx
-git commit -m "feat: add my awesome tip"
-git push origin feature/my-tip
-
-# 4. 在 GitHub 上创建 PR
-# 5. 等待 CI 验证通过 ✅
-# 6. Merge PR
-# 7. 等待自动部署完成！
-```
-
-## 📝 Tip 文件格式
-
-### 必须字段
-
-```yaml
----
-title: string              # 例如："Quick File Navigation"
-subtitle: string           # 例如："Navigate files faster"
-category: string           # 例如："navigation", "plugins"
-difficulty: string         # 例如："beginner", "advanced"
-tags: array                # 例如：["keyboard", "workflow"]（最多10个）
-mediaType: enum            # "image" 或 "video"
-mediaUrl: string           # 有效的 URL
-publishedAt: date          # 格式：YYYY-MM-DD
----
-```
-
-### 可选字段
-
-```yaml
-updatedAt: date            # 最后更新日期
-featured: boolean          # 是否显示在主页
-newInMonth: date           # 新功能发布月份
-```
-
-## ✅ 验证规则
-
-| 规则 | 说明 |
-|------|------|
-| 文件名格式 | 必须是 kebab-case（`my-tip-name.mdx`） |
-| tags 数量 | 最多 10 个标签 |
-| mediaUrl | 必须是有效的 URL |
-| 日期格式 | 必须是 `YYYY-MM-DD` |
-| category/difficulty | 支持任意字符串（灵活性） |
-
-## ❌ 常见错误
-
-```
-❌ 错误                    ✅ 正确
-my_tip.mdx                my-tip.mdx
-MyTip.mdx                 my-tip.mdx
-title: "My Tip"           必须包含 subtitle, tags 等
-mediaType: "img"          mediaType: "image"
-publishedAt: 01/15/2025   publishedAt: 2025-01-15
-tags: [1,2,3,...,11]      tags: [1,2,...,10]（最多10个）
-```
-
-## 🔄 完整工作流程
-
-```
-你的 PR
-   ↓
-CI 验证 (validate-tips.yml)
-   ├─ 检查文件名 ✓
-   ├─ 解析 YAML ✓
-   ├─ 验证字段 ✓
-   └─ 检查数据类型 ✓
-   ↓
-✅ 通过      |  ❌ 失败
-可以 merge   |  无法 merge
-   ↓
-你 merge PR
-   ↓
-自动触发重建 (trigger-rebuild.yml)
-   ↓
-zed.tips 网站自动重建 (rebuild-from-tips-data.yml)
-   ├─ 克隆最新数据
-   ├─ pnpm build
-   └─ 部署到 Cloudflare Pages
-   ↓
-🚀 完成！https://zed.tips 已更新
-```
-
-**总耗时**：约 2-3 分钟
-
-## 📖 详细文档
-
-- **[QUICK_START.md](./QUICK_START.md)** - 快速开始指南（5分钟）
-- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - 详细配置步骤和故障排除
-- **[IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)** - 架构设计说明
-- **[CHECKLIST.md](./CHECKLIST.md)** - 部署检查清单
-
-## 🛠️ 本地开发
-
-### 克隆 zed-tips-data 用于本地测试
-
-```bash
-# 如果你在 zed.tips 中开发，需要本地数据
-git clone https://github.com/zed-tips/zed-tips-data.git /path/to/zed.tips/src/content/community-tips
-```
-
-### 验证你的 Tip 格式
-
-```bash
-# 安装依赖
-pnpm install
-
-# 运行验证脚本
-pnpm validate:tips
-
-# 输出应该显示所有 tips 都通过验证 ✅
-```
-
-## 🔐 CI/CD 配置
-
-这个项目配置了自动化的 CI/CD 流程：
-
-- ✅ **PR 验证**：提交时自动验证格式
-- ✅ **自动触发**：Merge 后自动触发下游构建
-- ✅ **安全通信**：使用 GitHub App，无需 Personal Token
-- ✅ **完整日志**：所有过程都可在 GitHub Actions 中查看
-
-配置详情见 [SETUP_GUIDE.md](./SETUP_GUIDE.md) 和 [IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md)
-
-## 📋 Tip 示例
-
-```yaml
----
-title: "Quick File Navigation with Go to File"
-subtitle: "Navigate to any file instantly using Cmd+P"
-category: "navigation"
-difficulty: "beginner"
-tags: ["shortcuts", "workflow", "file-management"]
-mediaType: "image"
-mediaUrl: "https://zed.tips/debugger.webp"
+mediaUrl: "https://zed.tips/assets/smart-nav.webp"
 publishedAt: 2025-01-15
 featured: true
 newInMonth: 2025-01-01
 ---
 
-The **Go to File** feature in Zed allows you to quickly navigate to any file in your project.
+The **Go to Definition** feature lets you quickly jump to where a symbol is defined.
 
 ## How to Use
 
-1. Press `Cmd+P` (macOS) or `Ctrl+P` (Linux/Windows)
-2. Start typing the filename
-3. Use fuzzy search to find files quickly
-4. Press `Enter` to open the file
+1. Right-click on any symbol (variable, function, class)
+2. Select "Go to Definition" or press `Cmd+Shift+D`
+3. You're instantly taken to the definition
 
 ## Pro Tips
 
-- You don't need to type the full filename
-- Use `/` to navigate through directory paths
-- Combine with `Cmd+Shift+P` for the command palette
+- Use `Alt+Left Arrow` to go back to your previous location
+- Hover over a symbol with `Cmd` held to see a preview
+- Create keyboard shortcuts for faster navigation
 ```
 
-## 🤝 贡献指南
+## File Format Rules
 
-1. Fork 这个仓库
-2. 创建你的 tip 分支
-3. 按照格式要求编写 tip
-4. 提交 PR
-5. 等待 CI 验证通过
-6. Maintainer 审查并 merge
-7. 自动部署到网站！
+### Naming Convention
 
-## 📞 遇到问题？
+- Use **kebab-case** for file names
+- Valid: `quick-file-navigation.mdx`, `debug-tips.mdx`
+- Invalid: `QuickFileNavigation.mdx`, `quick_file_navigation.mdx`
 
-### CI 验证失败
+### Content Validation
 
-查看 PR 的 "Checks" 标签，点击失败的 `validate` 检查查看详细错误信息。
+| Rule | Requirement |
+|------|-------------|
+| **Filename** | Must match `kebab-case` pattern |
+| **Title & Subtitle** | Non-empty strings |
+| **Category** | Any string (no restrictions) |
+| **Difficulty** | Any string (no restrictions) |
+| **Tags** | Array with 1-10 items |
+| **MediaType** | Must be `"image"` or `"video"` |
+| **MediaUrl** | Valid URL format |
+| **PublishedAt** | Valid date in `YYYY-MM-DD` format |
 
-常见问题：
-- **文件名错误** - 使用 kebab-case（`my-tip-name.mdx`）
-- **缺少字段** - 检查是否包含所有必须字段
-- **日期格式** - 使用 `YYYY-MM-DD` 格式
-- **tags 过多** - 最多 10 个标签
+### Common Mistakes
 
-### 自动部署失败
+| ❌ Wrong | ✅ Correct |
+|---------|-----------|
+| `my_tip.mdx` | `my-tip.mdx` |
+| `MyTip.mdx` | `my-tip.mdx` |
+| `mediaType: "img"` | `mediaType: "image"` |
+| `publishedAt: 01/15/2025` | `publishedAt: 2025-01-15` |
+| `tags: [a, b, c, ..., k, l]` (11 items) | `tags: [a, b, c, d, e]` (max 10) |
 
-联系 maintainer，检查 GitHub Actions 日志。
+## Workflow Overview
 
-## 📚 相关链接
+```
+You create a PR with a new tip
+              ↓
+GitHub Actions: Validate Tips
+  ├─ Check filename format
+  ├─ Parse YAML front matter
+  ├─ Validate all required fields
+  └─ Verify data types
+              ↓
+    ❌ Failed          ✅ Passed
+  Cannot merge      Ready to merge
+              ↓
+You merge the PR
+              ↓
+GitHub Actions: Trigger Rebuild
+  └─ Signal zed.tips to rebuild
+              ↓
+GitHub Actions: Rebuild from Tips Data (on zed.tips)
+  ├─ Fetch latest tips
+  ├─ Build website
+  └─ Deploy to Cloudflare
+              ↓
+🚀 Live! https://zed.tips is updated
+```
 
-- [zed.tips 网站](https://zed.tips)
-- [zed 编辑器](https://zed.dev)
-- [Astro 文档](https://docs.astro.build)
-- [GitHub Actions](https://docs.github.com/en/actions)
+**Total time: 2-3 minutes from merge to live**
 
-## 📄 许可证
+## Local Development
 
-MIT
+### Validate Tips Locally
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run validation script
+pnpm validate:tips
+
+# Output example:
+# 🔍 Validating tips format...
+# Found 2 tip file(s) to validate:
+# ✅ tips/quick-navigation.mdx
+# ✅ tips/debug-tips.mdx
+# ============================================================
+# ✅ All 2 file(s) passed validation
+```
+
+### Test Your Tip
+
+```bash
+# Clone the website repo
+git clone https://github.com/zed-tips/zed.tips.git
+cd zed.tips
+
+# Link community tips
+git clone https://github.com/zed-tips/zed-tips-data.git src/content/community-tips
+
+# Start development server
+pnpm dev
+
+# Visit http://localhost:3000 to see your tip
+```
+
+## CI/CD Configuration
+
+This repository uses automated CI/CD:
+
+- ✅ **PR Validation** - Automatic format checks on every PR
+- ✅ **Auto-merge** - Only valid tips can be merged
+- ✅ **Auto-deployment** - Changes deploy automatically after merge
+- ✅ **Secure** - Uses GitHub App authentication (no personal tokens)
+- ✅ **Auditable** - All actions logged and traceable
+
+## Contributing
+
+We welcome contributions! Here's the process:
+
+1. **Fork** this repository
+2. **Create** a feature branch (`git checkout -b feature/my-tip`)
+3. **Write** your tip following the format specification
+4. **Test** locally with `pnpm validate:tips`
+5. **Commit** with clear messages
+6. **Push** to your fork
+7. **Create a Pull Request**
+8. **Address** any CI validation failures
+9. **Wait for approval** from maintainers
+10. **Celebrate** when merged! 🎉
+
+## Troubleshooting
+
+### Validation Failed
+
+**Check the PR comments** for validation errors. Common issues:
+
+- **Invalid filename** - Use kebab-case (`my-tip.mdx`)
+- **Missing fields** - Ensure all required fields are present
+- **Invalid date format** - Use `YYYY-MM-DD` format
+- **Too many tags** - Maximum is 10 tags
+- **Invalid mediaType** - Must be `"image"` or `"video"`
+
+### Deployment Failed
+
+Contact the maintainers. Check the GitHub Actions logs at:
+`https://github.com/zed-tips/zed-tips-data/actions`
+
+## Guidelines
+
+### What Makes a Good Tip
+
+- **Practical** - Solves a real problem or improves productivity
+- **Clear** - Easy to understand for the target audience
+- **Concise** - Get to the point quickly
+- **Visual** - Include screenshots or videos when helpful
+- **Actionable** - Users can immediately apply the tip
+
+### Tip Categories
+
+- **shortcuts** - Keyboard shortcuts and hotkeys
+- **navigation** - Moving efficiently through code and files
+- **editing** - Editing techniques and tricks
+- **debugging** - Debugging workflows and tools
+- **plugins** - Extensions and extensions management
+- **config** - Configuration and customization
+- **productivity** - General productivity tips
+
+### Before Submitting
+
+- [ ] Tip is in kebab-case filename
+- [ ] All required fields are present
+- [ ] MediaUrl is valid and accessible
+- [ ] Date format is correct (YYYY-MM-DD)
+- [ ] Tags are between 1-10 items
+- [ ] Content is clear and helpful
+- [ ] No spelling or grammar errors
+- [ ] Run `pnpm validate:tips` locally
+
+## Resources
+
+- [Zed Editor](https://zed.dev) - Official Zed website
+- [Zed Tips](https://zed.tips) - Published tips
+- [Astro Documentation](https://docs.astro.build) - Website framework
+- [Markdown Guide](https://www.markdownguide.org/) - Markdown syntax
+
+## License
+
+MIT License - feel free to use this repository as a reference for your own projects.
+
+## Questions?
+
+- Open an [issue](https://github.com/zed-tips/zed-tips-data/issues)
+- Check [GitHub Discussions](https://github.com/zed-tips/zed-tips-data/discussions)
+- Contact the maintainers
 
 ---
 
-**准备好提交你的 Tip 了吗？** 🚀
-
-阅读 [QUICK_START.md](./QUICK_START.md) 开始吧！
+**Ready to share your Zed expertise?** Submit a tip today! 🚀
