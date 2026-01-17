@@ -1,7 +1,5 @@
 # Dependencies
 node_modules/
-# pnpm-lock.yaml should be committed for reproducible installs
-# pnpm-lock.yaml
 yarn.lock
 package-lock.json
 
@@ -23,7 +21,3 @@ package-lock.json
 .idea/
 *.sublime-project
 *.sublime-workspace
-
-# Build outputs
-dist/
-.astro/
