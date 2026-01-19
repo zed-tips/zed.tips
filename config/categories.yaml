@@ -1,0 +1,26 @@
+---
+- id: shortcuts
+  title: Keyboard Shortcuts
+  icon: ⌨️
+  iconName: keyboard
+  order: 1
+- id: plugins
+  title: Plugins & Extensions
+  icon: 🧩
+  iconName: puzzle
+  order: 2
+- id: config
+  title: Configuration
+  icon: ⚙️
+  iconName: settings
+  order: 3
+- id: productivity
+  title: Productivity
+  icon: ⚡
+  iconName: zap
+  order: 4
+- id: navigation
+  title: Code Navigation
+  icon: 🧭
+  iconName: compass
+  order: 5

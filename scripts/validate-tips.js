@@ -6,55 +6,54 @@ import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 import matter from 'gray-matter';
 import { z } from 'zod';
+import yaml from 'js-yaml';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const tipsDir = path.join(__dirname, '../tips');
+const configDir = path.join(__dirname, '../config');
 
-// Define the same schema as zed.tips
-const tipsSchema = z.object({
-  title: z.string().min(1, 'title is required'),
-  subtitle: z.string().min(1, 'subtitle is required'),
-  category: z.string().min(1, 'category is required'),
-  difficulty: z.string().min(1, 'difficulty is required'),
-  tags: z.array(z.string()).min(1, 'tags must have at least 1 item').max(10, 'tags cannot exceed 10 items'),
-  mediaType: z.enum(['image', 'video'], { message: 'mediaType must be either "image" or "video"' }),
-  mediaUrl: z.string().url('mediaUrl must be a valid URL'),
-  publishedAt: z.coerce.date({ message: 'publishedAt must be a valid date in format YYYY-MM-DD' }),
-  updatedAt: z.coerce.date({ message: 'updatedAt must be a valid date in format YYYY-MM-DD' }).optional(),
-  featured: z.boolean().optional(),
-  newInMonth: z.coerce.date({ message: 'newInMonth must be a valid date in format YYYY-MM-DD' }).optional(),
-});
-
-// Filename pattern validation: xx-xx-xx format
-const filenamePattern = /^[a-z0-9]+(-[a-z0-9]+)*\.(md|mdx)$/;
-
-/**
- * Get changed files from git diff
- */
-function getChangedFiles() {
+function loadConfigIds(filename) {
+  const configPath = path.join(configDir, filename);
   try {
-    // Get files changed between origin/main and current HEAD
-    const output = execSync('git diff --name-only origin/main...HEAD', {
-      encoding: 'utf-8',
-      stdio: ['pipe', 'pipe', 'pipe'], // Suppress stderr
-    }).trim();
-
-    if (!output) {
-      return [];
-    }
-
-    return output
-      .split('\n')
-      .filter(file => file.match(/tips\/.*\.(md|mdx)$/));
+    const content = fs.readFileSync(configPath, 'utf-8');
+    const items = yaml.load(content);
+    return items.map(item => item.id);
   } catch (error) {
-    // Fallback: if we can't get git diff, check all files in tips directory
-    console.warn('Warning: Could not get git diff, validating all files in tips directory');
-    return getAllTipsFiles();
+    console.error(`Failed to load ${filename}:`, error.message);
+    process.exit(1);
   }
 }
 
+const validCategories = loadConfigIds('categories.yaml');
+const validDifficulties = loadConfigIds('difficulties.yaml');
+
+const filenamePattern = /^[a-z0-9]+(-[a-z0-9]+)*\.(md|mdx)$/;
+
+const tipsSchema = z.object({
+  title: z.string().min(1, 'title is required'),
+  subtitle: z.string().min(1, 'subtitle is required'),
+  category: z.enum(validCategories, {
+    errorMap: () => ({ message: `category must be one of: ${validCategories.join(', ')}` })
+  }),
+  difficulty: z.enum(validDifficulties, {
+    errorMap: () => ({ message: `difficulty must be one of: ${validDifficulties.join(', ')}` })
+  }),
+
+  // Auto-added after merge
+  publishedAt: z.coerce.date({ message: 'publishedAt must be a valid date in format YYYY-MM-DD' }).optional(),
+  updatedAt: z.coerce.date({ message: 'updatedAt must be a valid date in format YYYY-MM-DD' }).optional(),
+  author: z.string().optional(),
+  authorUrl: z.string().url('authorUrl must be a valid URL').optional(),
+
+  // Optional
+  tags: z.array(z.string()).optional(),
+  mediaType: z.enum(['image', 'video'], { message: 'mediaType must be either "image" or "video"' }).optional(),
+  mediaUrl: z.string().url('mediaUrl must be a valid URL').optional(),
+});
+
 /**
- * Get all tips files
+ * Get all tips files in the tips directory
+ * @returns {string[]} Array of file paths
  */
 function getAllTipsFiles() {
   if (!fs.existsSync(tipsDir)) {
@@ -67,7 +66,33 @@ function getAllTipsFiles() {
 }
 
 /**
+ * Get changed files from git diff, fallback to all files if git is unavailable
+ * @returns {string[]} Array of file paths
+ */
+function getChangedFiles() {
+  try {
+    const output = execSync('git diff --name-only origin/main...HEAD', {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'pipe'],
+    }).trim();
+
+    if (!output) {
+      return [];
+    }
+
+    return output
+      .split('\n')
+      .filter(file => file.match(/tips\/.*\.(md|mdx)$/));
+  } catch (error) {
+    console.warn('Warning: Could not get git diff, validating all files in tips directory');
+    return getAllTipsFiles();
+  }
+}
+
+/**
  * Validate filename format
+ * @param {string} filepath - Path to the file
+ * @returns {{valid: boolean, error?: string}}
  */
 function validateFilename(filepath) {
   const filename = path.basename(filepath);
@@ -81,48 +106,46 @@ function validateFilename(filepath) {
 }
 
 /**
+ * Read and parse a tip file
+ * @param {string} filepath - Path to the file
+ * @returns {{valid: boolean, frontMatter?: object, error?: string}}
+ */
+function parseTipFile(filepath) {
+  const fullPath = path.join(process.cwd(), filepath);
+
+  if (!fs.existsSync(fullPath)) {
+    return { valid: false, error: `File not found: ${filepath}` };
+  }
+
+  try {
+    const content = fs.readFileSync(fullPath, 'utf-8');
+    const { data: frontMatter } = matter(content);
+    return { valid: true, frontMatter };
+  } catch (error) {
+    return { valid: false, error: `Failed to parse file: ${error.message}` };
+  }
+}
+
+/**
  * Validate a single tip file
+ * @param {string} filepath - Path to the file
+ * @returns {{valid: boolean, error?: string}}
  */
 function validateTipFile(filepath) {
-  // Check filename
+  // Validate filename
   const filenameValidation = validateFilename(filepath);
   if (!filenameValidation.valid) {
     return filenameValidation;
   }
 
-  // Read and parse file
-  const fullPath = path.join(process.cwd(), filepath);
-  if (!fs.existsSync(fullPath)) {
-    return {
-      valid: false,
-      error: `File not found: ${filepath}`,
-    };
-  }
-
-  let content;
-  try {
-    content = fs.readFileSync(fullPath, 'utf-8');
-  } catch (error) {
-    return {
-      valid: false,
-      error: `Failed to read file: ${error.message}`,
-    };
-  }
-
-  // Parse front matter
-  let frontMatter;
-  try {
-    const parsed = matter(content);
-    frontMatter = parsed.data;
-  } catch (error) {
-    return {
-      valid: false,
-      error: `Failed to parse front matter: ${error.message}`,
-    };
+  // Parse file
+  const parseResult = parseTipFile(filepath);
+  if (!parseResult.valid) {
+    return parseResult;
   }
 
   // Validate schema
-  const validation = tipsSchema.safeParse(frontMatter);
+  const validation = tipsSchema.safeParse(parseResult.frontMatter);
   if (!validation.success) {
     const errors = validation.error.issues
       .map(issue => `- ${issue.path.join('.')}: ${issue.message}`)
@@ -151,26 +174,26 @@ function main() {
 
   console.log(`Found ${changedFiles.length} tip file(s) to validate:\n`);
 
-  let hasErrors = false;
-  const results = [];
+  const results = changedFiles.map(file => ({
+    file,
+    ...validateTipFile(file)
+  }));
 
-  for (const file of changedFiles) {
-    const validation = validateTipFile(file);
-    results.push({ file, ...validation });
-
-    if (validation.valid) {
+  // Display results
+  results.forEach(({ file, valid, error }) => {
+    if (valid) {
       console.log(`✅ ${file}`);
     } else {
       console.log(`❌ ${file}`);
-      console.log(`   ${validation.error.split('\n').join('\n   ')}`);
-      hasErrors = true;
+      console.log(`   ${error.split('\n').join('\n   ')}`);
     }
-  }
+  });
 
   console.log(`\n${'='.repeat(60)}`);
 
-  if (hasErrors) {
-    console.log(`❌ Validation failed for ${results.filter(r => !r.valid).length} file(s)`);
+  const failedCount = results.filter(r => !r.valid).length;
+  if (failedCount > 0) {
+    console.log(`❌ Validation failed for ${failedCount} file(s)`);
     process.exit(1);
   } else {
     console.log(`✅ All ${changedFiles.length} file(s) passed validation`);
