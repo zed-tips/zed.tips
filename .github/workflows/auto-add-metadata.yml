@@ -47,7 +47,13 @@ jobs:
       - name: Get changed files
         id: changed-files
         run: |
-          FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep "^tips/.*\.\(md\|mdx\)$" | tr '\n' ' ' || true)
+          # Get files changed in the push event (works for both regular commits and merge commits)
+          if [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep "^tips/.*\.\(md\|mdx\)$" | tr '\n' ' ' || true)
+          else
+            # First push to branch, use diff-tree
+            FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep "^tips/.*\.\(md\|mdx\)$" | tr '\n' ' ' || true)
+          fi
           echo "files=$FILES" >> $GITHUB_OUTPUT
           echo "Changed files: $FILES"
 
