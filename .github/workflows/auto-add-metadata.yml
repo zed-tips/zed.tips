@@ -77,7 +77,7 @@ jobs:
       - name: Commit and push changes
         if: steps.check-changes.outputs.has-changes == 'true'
         run: |
-          git add tips/*.md tips/*.mdx || true
+          git add -A tips/
           git commit -m "chore: auto-add metadata fields [auto-metadata]"
           git push origin main
 
