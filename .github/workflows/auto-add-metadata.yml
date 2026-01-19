@@ -41,7 +41,7 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name "GitHub Actions"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Get changed files
@@ -99,7 +99,7 @@ jobs:
       - name: Trigger rebuild workflow on zed.tips
         run: |
           gh workflow run rebuild-from-tips-data.yml \
-            --repo zed-tips/website \
+            --repo zed-tips/zed.tips \
             --ref main
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
