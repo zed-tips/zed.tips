@@ -1,0 +1,22 @@
+{
+    "name": "zed.tips",
+    "version": "1.0.0",
+    "description": "Community-contributed tips and tricks for the Zed editor",
+    "type": "module",
+    "scripts": {
+        "validate:tips": "node scripts/validate-tips.js",
+        "auto-add:metadata": "node scripts/auto-add-metadata.js"
+    },
+    "keywords": [
+        "zed",
+        "editor",
+        "tips"
+    ],
+    "author": "Zed Tips",
+    "license": "MIT",
+    "dependencies": {
+        "gray-matter": "^4.0.3",
+        "js-yaml": "^4.1.0",
+        "zod": "^3.25.0"
+    }
+}

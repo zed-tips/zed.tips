@@ -1,0 +1,99 @@
+name: Auto-add Metadata
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tips/**/*.md'
+      - 'tips/**/*.mdx'
+
+permissions:
+  contents: write
+
+jobs:
+  auto-add-metadata:
+    name: Auto-add metadata fields
+    if: |
+      !contains(github.event.head_commit.message, '[auto-metadata]') &&
+      github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep "^tips/.*\.\(md\|mdx\)$" | tr '\n' ' ' || true)
+          echo "files=$FILES" >> $GITHUB_OUTPUT
+          echo "Changed files: $FILES"
+
+      - name: Auto-add metadata
+        if: steps.changed-files.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.files }}
+        run: pnpm auto-add:metadata
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet; then
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+            echo "No metadata changes needed"
+          else
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+            echo "Metadata was added/updated"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check-changes.outputs.has-changes == 'true'
+        run: |
+          git add tips/*.md tips/*.mdx || true
+          git commit -m "chore: auto-add metadata fields [auto-metadata]"
+          git push origin main
+
+  trigger-rebuild:
+    name: Trigger zed.tips rebuild
+    needs: auto-add-metadata
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Generate GitHub App token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - name: Trigger rebuild workflow on zed.tips
+        run: |
+          gh workflow run rebuild-from-tips-data.yml \
+            --repo zed-tips/zed.tips \
+            --ref main
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
