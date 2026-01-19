@@ -96,10 +96,9 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
-      - name: Trigger rebuild via repository dispatch
+      - name: Trigger rebuild via workflow dispatch
         run: |
-          gh api repos/zed-tips/website/dispatches \
-            --method POST \
-            --field event_type=update_tips
+          gh workflow run rebuild-from-tips-data.yml \
+            --repo zed-tips/website
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
