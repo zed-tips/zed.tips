@@ -82,7 +82,7 @@ jobs:
           git push origin main
 
   trigger-rebuild:
-    name: Trigger zed.tips rebuild
+    name: Trigger website rebuild
     needs: auto-add-metadata
     if: always() && !cancelled()
     runs-on: ubuntu-latest
@@ -96,10 +96,10 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 
-      - name: Trigger rebuild workflow on zed.tips
+      - name: Trigger rebuild via repository dispatch
         run: |
-          gh workflow run rebuild-from-tips-data.yml \
-            --repo zed-tips/zed.tips \
-            --ref main
+          gh api repos/zed-tips/website/dispatches \
+            --method POST \
+            --field event_type=update_tips
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
