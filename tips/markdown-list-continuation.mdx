@@ -1,0 +1,45 @@
+---
+title: Auto-Continue Markdown Lists
+subtitle: Effortlessly create nested lists with automatic continuation
+category: productivity
+difficulty: beginner
+tags:
+  - markdown
+  - writing
+  - editing
+---
+
+Zed now automatically continues Markdown lists when you press Enter, making it faster to write documentation, notes, and README files.
+
+## Features
+
+### Automatic List Continuation
+
+When you press `Enter` at the end of a list item, Zed automatically creates the next item:
+
+- Works with unordered lists (`-`, `*`, `+`)
+- Works with ordered lists (`1.`, `2.`, `3.`)
+- Works with task lists (`- [ ]`, `- [x]`)
+
+### Tab Indentation
+
+Press `Tab` on a list marker to quickly create nested lists:
+
+```markdown
+- Parent item
+  - Child item (created by pressing Tab)
+    - Grandchild item
+```
+
+## Configuration
+
+Both features are enabled by default, but you can customize them:
+
+```json
+{
+  "extend_list_on_newline": true,  // Auto-continue lists on Enter
+  "indent_list_on_tab": true        // Indent lists with Tab
+}
+```
+
+Perfect for writing documentation, taking notes, or creating structured content without breaking your flow.

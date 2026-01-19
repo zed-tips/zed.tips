@@ -1,0 +1,36 @@
+---
+title: Create Pull Requests from Zed
+subtitle: Open PRs directly from the editor without leaving your workflow
+category: productivity
+difficulty: beginner
+tags:
+  - git
+  - github
+  - workflow
+---
+
+Zed now includes a built-in command to create pull requests for your current branch, streamlining your Git workflow without switching to the browser.
+
+## How to Use
+
+1. Ensure you're on the branch you want to create a PR for
+2. Open the command palette with `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Linux/Windows)
+3. Type "git: create pull request"
+4. Press `Enter`
+
+Zed will open your default browser with the PR creation page pre-filled with your branch information.
+
+## Requirements
+
+- Your branch must be pushed to the remote repository
+- Works with GitHub, GitLab, and other platforms that support PR URLs
+- Automatically detects your repository's remote URL
+
+## Workflow
+
+1. Make your changes in Zed
+2. Stage and commit using the Git panel (`Cmd+Shift+G`)
+3. Push to remote from the terminal
+4. Create PR with `git: create pull request` command
+
+No more context switching between editor, terminal, and browser!
