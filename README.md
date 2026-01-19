@@ -16,8 +16,6 @@ Visit [zedtips.com](https://zedtips.com) to browse all tips.
 
 ## Contributing
 
-Built by the Community, Free Forever
-
 Every tip on Zed.tips is completely free and contributed by developers like you. Join our growing community and help others master the Zed editor.
 
 Ready to contribute? Check out our [Contributing Guide](CONTRIBUTING.md) to get started!
