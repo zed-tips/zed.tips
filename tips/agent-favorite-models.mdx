@@ -1,0 +1,49 @@
+---
+title: Pin Your Favorite AI Models
+subtitle: Quick access to your most-used language models with favorites
+category: productivity
+difficulty: beginner
+tags:
+  - ai
+  - agent
+  - workflow
+mediaType: video
+mediaUrl: https://github.com/user-attachments/assets/cf23afe4-3883-45cb-9906-f55de3ea2a97
+---
+
+With dozens of AI models available in Zed's agent panel, finding your preferred models can be time-consuming. The **favorite models** feature pins your most-used models to the top of the list for instant access.
+
+## How to Mark Favorites
+
+1. Open the agent panel or inline assistant
+2. Click the model selector dropdown
+3. Hover over any model to reveal the star icon
+4. Click the star to mark/unmark as favorite
+
+Favorited models appear in a dedicated section at the top of the list, separated from other models.
+
+## Quick Switching with Alt-Tab
+
+Once you've marked multiple models as favorites, you can cycle through them:
+
+- Press `Alt+Tab` to switch to the next favorite model
+- Perfect for comparing responses from different models
+- Works in agent threads, text threads, and inline assistant
+
+## Configuration
+
+You can also manually configure favorites in `settings.json`:
+
+```json
+{
+  "agent": {
+    "favorite_models": [
+      "anthropic/claude-sonnet-4",
+      "openai/gpt-4",
+      "openai/o1"
+    ]
+  }
+}
+```
+
+No more scrolling through long model lists—your preferred models are always one click away!
