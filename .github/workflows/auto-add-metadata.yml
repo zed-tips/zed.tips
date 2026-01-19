@@ -77,7 +77,7 @@ jobs:
       - name: Commit and push changes
         if: steps.check-changes.outputs.has-changes == 'true'
         run: |
-          git add tips/*.md tips/*.mdx || true
+          git add -A tips/
           git commit -m "chore: auto-add metadata fields [auto-metadata]"
           git push origin main
 
@@ -99,7 +99,7 @@ jobs:
       - name: Trigger rebuild workflow on zed.tips
         run: |
           gh workflow run rebuild-from-tips-data.yml \
-            --repo zed-tips/zed.tips \
+            --repo zed-tips/website \
             --ref main
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
