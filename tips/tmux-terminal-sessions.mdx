@@ -1,0 +1,66 @@
+---
+title: Launch Terminal with tmux Sessions
+subtitle: Automatically start project-specific tmux sessions when opening terminals
+category: productivity
+difficulty: advanced
+tags:
+  - terminal
+  - tmux
+  - workflow
+mediaType: image
+mediaUrl: https://zed.dev/img/post/hidden-gems-part-2/terminal-tmux-session.webp
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+Configure Zed to automatically launch **tmux sessions** when opening a new terminal, giving you persistent terminal sessions with window management, even when closing and reopening Zed.
+
+## Configuration
+
+Add this to your Zed settings:
+
+```json
+{
+  "terminal": {
+    "shell": {
+      "program": "tmux",
+      "args": ["new-session", "-A", "-s", "zed-session"]
+    }
+  }
+}
+```
+
+## Benefits
+
+**Persistent Sessions**:
+- Terminal state survives Zed restarts
+- Background processes keep running
+- Command history is preserved
+
+**Window Management**:
+- Split terminals within tmux
+- Multiple windows per session
+- Navigate with tmux keybindings
+
+**Project-Specific Sessions**:
+Use different session names per project:
+
+```json
+{
+  "terminal": {
+    "shell": {
+      "program": "tmux",
+      "args": ["new-session", "-A", "-s", "my-project"]
+    }
+  }
+}
+```
+
+## How It Works
+
+- `-A` attaches to existing session or creates new one
+- `-s` specifies the session name
+- When you close Zed, the tmux session continues running
+- Reopen Zed and reconnect to the same session with all your state intact
+
+Perfect for long-running dev servers, watch modes, or any process you want to persist across Zed sessions!

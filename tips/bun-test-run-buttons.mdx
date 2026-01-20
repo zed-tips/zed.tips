@@ -1,0 +1,63 @@
+---
+title: Add Run Buttons for Bun Tests
+subtitle: Configure test runner tasks to get inline run buttons in test files
+category: productivity
+difficulty: intermediate
+tags:
+  - testing
+  - bun
+  - tasks
+mediaType: image
+mediaUrl: https://zed.dev/img/post/hidden-gems-part-2/bun-test-tasks.webp
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+Configure test runner tasks in Zed to get convenient **inline run buttons** next to your test functions, making it easy to run individual tests or test suites with a single click.
+
+## Configuration
+
+Add this to your project's `.zed/tasks.json` for Bun tests:
+
+```json
+[
+  {
+    "label": "test $ZED_SYMBOL",
+    "command": "bun test --bail --test-name-pattern '$ZED_SYMBOL'"
+  },
+  {
+    "label": "test $ZED_FILE",
+    "command": "bun test --bail $ZED_FILE"
+  }
+]
+```
+
+## How It Works
+
+Once configured, you'll see **run buttons** appear:
+- Next to individual test functions (uses `$ZED_SYMBOL`)
+- At the top of test files (uses `$ZED_FILE`)
+
+Click the button to run just that test or file, making test-driven development much faster.
+
+## Works With Other Runners
+
+This pattern works with any test runner:
+
+**Jest/Vitest:**
+```json
+{
+  "label": "test $ZED_SYMBOL",
+  "command": "npm test -- -t '$ZED_SYMBOL'"
+}
+```
+
+**Rust:**
+```json
+{
+  "label": "test $ZED_SYMBOL",
+  "command": "cargo test $ZED_SYMBOL"
+}
+```
+
+The `$ZED_SYMBOL` and `$ZED_FILE` variables are automatically replaced with the current symbol name and file path!

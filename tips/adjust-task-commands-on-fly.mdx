@@ -1,0 +1,35 @@
+---
+title: Adjust Task Commands on the Fly
+subtitle: Modify task commands before running them for quick iterations
+category: productivity
+difficulty: intermediate
+tags:
+  - tasks
+  - workflow
+  - terminal
+mediaType: image
+mediaUrl: https://zed.dev/img/post/hidden-gems-part-2/task-modal.webp
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+When spawning a task in Zed, you can **edit the command** before running it, making it easy to quickly iterate with different parameters or options without creating multiple task configurations.
+
+## How to Use
+
+1. Open the command palette (`Cmd-Shift-P`)
+2. Search for "task: spawn"
+3. Select your task from the list
+4. **Before the task runs**, you'll see the command in the modal
+5. Edit the command as needed (add flags, change arguments, etc.)
+6. Press `Enter` to run the modified command
+
+This is incredibly useful for:
+- **Testing different flags**: Try `cargo test --nocapture` vs `cargo test`
+- **Running specific tests**: Change `npm test` to `npm test -- specific-test.js`
+- **Adding debug output**: Add `RUST_BACKTRACE=1` or `DEBUG=*` to commands
+- **Quick experiments**: Modify build commands without editing task configs
+
+The original task configuration remains unchanged, so you can always run the default version or modify it again next time.
+
+For example, you might have a "run tests" task, but want to add `--watch` mode just this once - simply edit the command in the modal before running it!

@@ -1,0 +1,72 @@
+---
+title: Map Unknown File Types to Languages
+subtitle: Get syntax highlighting for custom file extensions by mapping them to known languages
+category: config
+difficulty: beginner
+tags:
+  - syntax-highlighting
+  - file-types
+  - customization
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+When working with files that have uncommon extensions, you can map them to known languages in Zed to get proper syntax highlighting and language features.
+
+## Configuration
+
+Add this to your Zed settings:
+
+```json
+{
+  "file_types": {
+    "JavaScript": ["*.mjs", "*.cjs"],
+    "Markdown": ["*.mdx", "*.md"],
+    "TOML": ["Cargo.lock"],
+    "JSON": ["*.jsonc", ".eslintrc"]
+  }
+}
+```
+
+## Common Use Cases
+
+**JavaScript variants:**
+```json
+{
+  "file_types": {
+    "JavaScript": ["*.mjs", "*.cjs", "*.es6"]
+  }
+}
+```
+
+**Config files:**
+```json
+{
+  "file_types": {
+    "JSON": [".babelrc", ".eslintrc", "*.jsonc"],
+    "YAML": [".yamllint", "*.yml"]
+  }
+}
+```
+
+**Build tools:**
+```json
+{
+  "file_types": {
+    "JavaScript": ["*.build.js"],
+    "TypeScript": ["*.config.ts"]
+  }
+}
+```
+
+**Custom extensions:**
+```json
+{
+  "file_types": {
+    "Python": ["*.pyw"],
+    "Rust": ["*.rs.in"]
+  }
+}
+```
+
+The mapping applies immediately - just open a file with the mapped extension and you'll get full language support including syntax highlighting, LSP features, and formatting!

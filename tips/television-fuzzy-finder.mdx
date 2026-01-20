@@ -1,0 +1,60 @@
+---
+title: Use Television as a Fuzzy Finder
+subtitle: Emulate Vim's Telescope with the fast Television fuzzy finder tool
+category: navigation
+difficulty: advanced
+tags:
+  - vim
+  - fuzzy-finder
+  - cli
+mediaType: image
+mediaUrl: https://zed.dev/img/post/hidden-gems-part-2/television-file-finder.webp
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+For Vim users missing Telescope, you can integrate [Television](https://github.com/alexpasmantier/television) - a blazing fast fuzzy finder written in Rust - directly into Zed as a task.
+
+## Installation
+
+First, install Television:
+
+```bash
+# macOS
+brew install television
+
+# Cargo
+cargo install television
+```
+
+## Configuration
+
+Add this to your `.zed/tasks.json`:
+
+```json
+[
+  {
+    "label": "television",
+    "command": "tv",
+    "use_new_terminal": true,
+    "reveal": "always"
+  }
+]
+```
+
+## How to Use
+
+1. Open command palette (`Cmd-Shift-P`)
+2. Search for "task: spawn"
+3. Select "television"
+
+Television will launch in a terminal pane with its powerful fuzzy finder interface, letting you search:
+- Files across your project
+- Git files only
+- Text content
+- Command history
+- And more
+
+It's significantly faster than built-in finders for large projects and provides a familiar interface for Vim users transitioning to Zed.
+
+Bind it to a keyboard shortcut in your keymap for even quicker access!
