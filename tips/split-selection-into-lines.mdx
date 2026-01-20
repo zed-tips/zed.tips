@@ -1,0 +1,42 @@
+---
+title: Split Selection Into Lines
+subtitle: Instantly create a cursor on every line in your selection
+category: shortcuts
+difficulty: beginner
+tags:
+  - multicursor
+  - editing
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+Need to edit multiple lines at once? The **Split Selection Into Lines** action (`editor: split selection into lines`) creates a cursor on each line within your selection, perfect for bulk text manipulation.
+
+This is incredibly useful when you need to:
+
+1. **Select** the text you want to edit (can be the entire buffer with `Cmd-A`)
+2. Use the command palette (`Cmd-Shift-P`) and search for "split selection into lines"
+3. **Edit** all lines simultaneously with multicursors
+
+Common use cases:
+
+- Add prefixes or suffixes to multiple lines (e.g., adding quotes or commas)
+- Delete the same characters from the start or end of many lines
+- Indent or format multiple lines at once
+- Convert a list into array elements or function arguments
+
+For example, converting a list like:
+```
+apple
+banana
+cherry
+```
+
+Into an array by adding quotes and commas:
+```javascript
+"apple",
+"banana",
+"cherry",
+```
+
+Just select all lines, split into lines, press `Home` to go to the start, add `"`, press `End` to go to the end, and add `",`.

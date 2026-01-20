@@ -1,0 +1,41 @@
+---
+title: Run Lazygit as a Task
+subtitle: Launch lazygit in Zed's terminal for a powerful Git workflow
+category: productivity
+difficulty: intermediate
+tags:
+  - git
+  - terminal
+  - tasks
+mediaType: image
+mediaUrl: https://zed.dev/img/post/hidden-gems-part-1/lazygit-example.webp
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+Love using [lazygit](https://github.com/jesseduffield/lazygit) for Git operations? You can configure it as a Zed task to launch it directly in the integrated terminal.
+
+Add this to your project's `.zed/tasks.json`:
+
+```json
+[
+  {
+    "label": "lazygit",
+    "command": "lazygit",
+    "use_new_terminal": true
+  }
+]
+```
+
+Now you can:
+1. Open the command palette (`Cmd-Shift-P`)
+2. Search for "task: spawn"
+3. Select "lazygit" from the list
+
+Lazygit will launch in a new terminal pane, giving you full access to its TUI for staging, committing, pushing, rebasing, and all other Git operations without leaving Zed.
+
+This works with any terminal-based tool you frequently use - just add it as a task configuration!
+
+**Note:** Make sure lazygit is installed on your system first:
+- macOS: `brew install lazygit`
+- Linux: See [installation instructions](https://github.com/jesseduffield/lazygit#installation)

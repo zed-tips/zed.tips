@@ -1,0 +1,36 @@
+---
+title: Auto-save on Focus Change
+subtitle: Automatically save files when switching between editor and terminal
+category: config
+difficulty: beginner
+tags:
+  - settings
+  - workflow
+  - autosave
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+Tired of manually saving files before running tests or build commands? Enable **auto-save on focus change** to automatically save your files whenever you switch from the editor to the terminal or another application.
+
+Add this to your Zed settings:
+
+```json
+{
+  "autosave": "on_focus_change"
+}
+```
+
+Now when you:
+- Switch from an editor pane to a terminal pane
+- Alt-Tab to another application
+- Click outside of the editor
+
+Your file is automatically saved, ensuring your tests and builds always run with your latest changes.
+
+This is particularly useful for test-driven development workflows where you're frequently switching between editing code and running tests. No more failed tests because you forgot to save!
+
+Other autosave options include:
+- `"off"` - Never auto-save (default)
+- `"on_window_change"` - Save when switching to a different window
+- `"on_focus_change"` - Save when focus leaves the editor pane
