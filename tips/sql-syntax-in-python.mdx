@@ -1,0 +1,55 @@
+---
+title: SQL Syntax Highlighting in Python
+subtitle: Better readability for SQL queries embedded in Python code
+category: productivity
+difficulty: beginner
+tags:
+  - python
+  - sql
+  - syntax-highlighting
+mediaType: image
+mediaUrl: https://github.com/user-attachments/assets/48a859da-c477-490d-be73-ca70d8e47cc9
+---
+
+Zed now provides **SQL syntax highlighting** inside Python string literals, making database queries more readable and easier to write.
+
+## Automatic Detection
+
+SQL highlighting works automatically when Zed detects SQL keywords in Python strings:
+
+```python
+# Automatically highlighted
+query = """
+    SELECT u.name, u.email, COUNT(o.id) as order_count
+    FROM users u
+    LEFT JOIN orders o ON u.id = o.user_id
+    WHERE u.created_at > '2024-01-01'
+    GROUP BY u.id, u.name, u.email
+    ORDER BY order_count DESC
+"""
+
+# Also works with single quotes and f-strings
+query = f'SELECT * FROM {table_name} WHERE id = {user_id}'
+```
+
+## Benefits
+
+**Improved Readability**
+- SQL keywords highlighted in different colors
+- Easier to spot syntax errors
+- Better visual separation from Python code
+
+**Faster Development**
+- Write queries more confidently
+- Spot typos immediately
+- Understand complex queries at a glance
+
+## Use Cases
+
+- Django ORM raw queries
+- SQLAlchemy text queries
+- Database migration scripts
+- Data analysis with pandas
+- API backends with direct SQL
+
+No configuration needed—just write SQL in Python strings and enjoy automatic highlighting!
