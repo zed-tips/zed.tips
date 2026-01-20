@@ -1,0 +1,30 @@
+---
+title: Select All Regex Matches
+subtitle: Create multiple cursors on all regex pattern matches instantly
+category: shortcuts
+difficulty: intermediate
+tags:
+  - regex
+  - multicursor
+  - search
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+Beyond the standard "select all matches" feature, Zed allows you to create multiple selections based on **regex patterns**, enabling powerful bulk editing workflows.
+
+Here's how to use it:
+
+1. Open buffer search with `Cmd-F` (macOS) or `Ctrl-F` (Linux/Windows)
+2. Enable the regex search filter by clicking the `.*` icon or pressing `Alt-R`
+3. Enter your regex pattern (e.g., `function\s+\w+` to match function names)
+4. Instead of pressing `Enter` to navigate through matches, press **`Alt-Enter`**
+
+This creates a cursor at each match, allowing you to edit all occurrences simultaneously.
+
+For example, you could:
+- Match all function declarations and add JSDoc comments
+- Find all hex colors (`#[0-9a-fA-F]{6}`) and convert them to RGB
+- Select all import statements matching a pattern and update them
+
+This is significantly more powerful than simple text matching, as you can use regex capture groups and complex patterns to target exactly what you need to edit.
