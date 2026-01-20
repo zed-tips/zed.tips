@@ -95,6 +95,8 @@ jobs:
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: zed-tips
+          repositories: website
 
       - name: Trigger rebuild via workflow dispatch
         run: |
