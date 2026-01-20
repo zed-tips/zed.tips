@@ -1,0 +1,54 @@
+---
+title: AI Commit Messages with Custom Rules
+subtitle: Generate commit messages that follow your team's conventions
+category: productivity
+difficulty: beginner
+tags:
+  - ai
+  - git
+  - workflow
+---
+
+Zed's AI-generated commit messages now respect custom **rules files** like `AGENTS.md`, ensuring generated messages follow your team's commit conventions.
+
+## How It Works
+
+1. Create an `AGENTS.md` file in your repository root
+2. Define your commit message rules and conventions
+3. When generating AI commit messages, Zed will follow these rules
+
+## Example Rules File
+
+Create `.github/AGENTS.md` or `AGENTS.md`:
+
+```markdown
+# Commit Message Guidelines
+
+## Format
+- Use conventional commits: `type(scope): description`
+- Types: feat, fix, docs, style, refactor, test, chore
+- Keep first line under 50 characters
+- Use imperative mood: "add" not "added"
+
+## Examples
+- feat(auth): add OAuth2 login support
+- fix(api): handle null response in user endpoint
+- docs(readme): update installation instructions
+```
+
+## Benefits
+
+**Consistency**: All commits follow the same style, even AI-generated ones
+
+**Team Alignment**: New team members learn conventions through AI suggestions
+
+**Automation**: Let AI handle formatting while you focus on the changes
+
+## Use Cases
+
+- Conventional Commits format
+- Ticket number prefixes (e.g., `[JIRA-123]`)
+- Emoji conventions (e.g., ✨ for features)
+- Character limits and formatting rules
+
+The AI reads your rules and generates commit messages that match your team's standards automatically.

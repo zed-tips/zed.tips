@@ -1,0 +1,48 @@
+---
+title: Develop in Containers with Dev Containers
+subtitle: Consistent development environments using DevContainer configuration
+category: productivity
+difficulty: intermediate
+tags:
+  - docker
+  - development
+  - devcontainers
+mediaType: video
+mediaUrl: https://github.com/user-attachments/assets/61f2fdaa-2808-4efc-994c-7b444a92c0b1
+---
+
+Zed now supports **Dev Containers**, allowing you to develop inside Docker containers with consistent, reproducible development environments.
+
+## What are Dev Containers?
+
+Dev Containers let you use a Docker container as a full-featured development environment. This ensures everyone on your team uses the same tools, runtime versions, and dependencies.
+
+## How to Use
+
+1. Add a `.devcontainer/devcontainer.json` file to your project root
+2. Open your project in Zed
+3. Zed will detect the Dev Container configuration
+4. Choose to open the project in the container
+
+## Example Configuration
+
+```json
+{
+  "name": "Node.js Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:18",
+  "customizations": {
+    "zed": {
+      "extensions": ["eslint", "prettier"]
+    }
+  }
+}
+```
+
+## Benefits
+
+- **Consistency**: Same environment across all developers
+- **Isolation**: Project dependencies don't conflict with system packages
+- **Onboarding**: New team members get started instantly
+- **Clean**: Keep your local machine clean
+
+Perfect for teams working with multiple tech stacks or complex dependency requirements.
