@@ -1,9 +1,10 @@
 ---
-title: Customize File Icons with Flair
-subtitle: Choose between monochrome or colorful file icons to match your preference
-category: config
+title: Add Colorful File Icons with Catppuccin
+subtitle: Install the Catppuccin Icons extension for vibrant, colorful file icons in your project panel
+category: plugins
 difficulty: beginner
 tags:
+  - extensions
   - ui
   - customization
   - icons
@@ -13,34 +14,28 @@ author: JosephTLyons
 authorUrl: https://github.com/JosephTLyons
 ---
 
-Zed allows you to customize file and folder icons in the project panel with the **file icon flair** setting, choosing between subtle monochrome icons or vibrant colorful ones.
+Zed ships with monochrome file icons by default, but if you want to add more visual flair to your project panel, you can install the **Catppuccin Icons** extension for vibrant, colorful icons.
 
-## Configuration
+## Installation
 
-Add this to your Zed settings:
+1. Open the extensions view (command palette → `zed: extensions`)
+2. Search for **Catppuccin Icons**
+3. Hit the **Install** button
+4. Open the Icon Theme selector (command palette → `icon theme selector: toggle`)
+5. Pick your favorite Catppuccin variant
+
+Now your project panel has clear visual distinctions between file types with colorful, recognizable icons!
+
+## Bonus: Show Icons in Tabs
+
+You can also add file icons to your tabs for even better visual organization. Add this to your Zed settings:
 
 ```json
 {
-  "file_icons": {
-    "flair": "colorful"  // or "monochrome"
+  "tabs": {
+    "file_icons": true
   }
 }
 ```
 
-## Options
-
-**Monochrome** (default):
-- Clean, minimal aesthetic
-- Icons use your theme's muted colors
-- Less visual distraction
-- Professional appearance
-
-**Colorful**:
-- Vibrant, recognizable icons
-- Each file type has distinct colors
-- Easier to spot specific file types at a glance
-- More personality
-
-The colorful option is particularly helpful when working with many different file types, as the distinctive colors make it easier to quickly identify files in the project panel.
-
-Try both settings and see which works better for your workflow and visual preferences!
+Or configure it through the command palette → `settings: open default settings` and search for "tabs".

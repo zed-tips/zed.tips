@@ -13,44 +13,20 @@ author: JosephTLyons
 authorUrl: https://github.com/JosephTLyons
 ---
 
-Configure Zed to automatically launch **tmux sessions** when opening a new terminal, giving you persistent terminal sessions with window management, even when closing and reopening Zed.
+If you're a tmux user, you can configure Zed to automatically attach to a project-specific tmux session when you open the terminal.
 
 ## Configuration
 
-Add this to your Zed settings:
+Add this to your `settings.json` file:
 
 ```json
 {
   "terminal": {
     "shell": {
-      "program": "tmux",
-      "args": ["new-session", "-A", "-s", "zed-session"]
-    }
-  }
-}
-```
-
-## Benefits
-
-**Persistent Sessions**:
-- Terminal state survives Zed restarts
-- Background processes keep running
-- Command history is preserved
-
-**Window Management**:
-- Split terminals within tmux
-- Multiple windows per session
-- Navigate with tmux keybindings
-
-**Project-Specific Sessions**:
-Use different session names per project:
-
-```json
-{
-  "terminal": {
-    "shell": {
-      "program": "tmux",
-      "args": ["new-session", "-A", "-s", "my-project"]
+      "with_arguments": {
+        "program": "/bin/zsh",  // or path to your preferred shell
+        "args": ["-c", "tmux new-session -A -s \"$(basename \"$PWD\")\""]
+      }
     }
   }
 }
@@ -58,9 +34,20 @@ Use different session names per project:
 
 ## How It Works
 
-- `-A` attaches to existing session or creates new one
-- `-s` specifies the session name
-- When you close Zed, the tmux session continues running
-- Reopen Zed and reconnect to the same session with all your state intact
+This configuration uses `$(basename "$PWD")` to automatically name the tmux session after your current project directory. Each project gets its own dedicated tmux session.
 
-Perfect for long-running dev servers, watch modes, or any process you want to persist across Zed sessions!
+The `-A` flag means "attach to existing session or create new one", so:
+- First time opening a terminal in a project: creates a new tmux session
+- Subsequent times: reconnects to the existing session
+- Different projects: get different tmux sessions automatically
+
+## Benefits
+
+This is great for those who prefer **keyboard-driven workflows** for:
+- **Selecting text** in the terminal
+- **Copying output** with tmux copy mode
+- **Navigating** through terminal history
+- **Splitting panes** within tmux
+- **Persistent sessions** that survive Zed restarts
+
+You get all the power of tmux while working in Zed, with automatic project-based session management!

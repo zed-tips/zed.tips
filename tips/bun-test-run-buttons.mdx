@@ -13,51 +13,37 @@ author: JosephTLyons
 authorUrl: https://github.com/JosephTLyons
 ---
 
-Configure test runner tasks in Zed to get convenient **inline run buttons** next to your test functions, making it easy to run individual tests or test suites with a single click.
+If you're a JS/TS developer who uses Bun and your project has `@types/bun` in `package.json`, Zed will automatically surface `bun test` run tasks for you.
+
+If you are using a different setup where Bun isn't automatically detected, here's how to add `bun test` run tasks yourself.
 
 ## Configuration
 
-Add this to your project's `.zed/tasks.json` for Bun tests:
+Add the following to your `tasks.json` file:
 
 ```json
 [
   {
-    "label": "test $ZED_SYMBOL",
-    "command": "bun test --bail --test-name-pattern '$ZED_SYMBOL'"
-  },
-  {
-    "label": "test $ZED_FILE",
-    "command": "bun test --bail $ZED_FILE"
+    "label": "Bun Test",
+    "command": "bun test",
+    "args": ["\"$ZED_RELATIVE_FILE\" -t=\"$ZED_SYMBOL\""],
+    "tags": ["js-test", "ts-test", "bun-test", "tsx-test"]
   }
 ]
 ```
 
 ## How It Works
 
-Once configured, you'll see **run buttons** appear:
+The `tags` field is crucial - it tells Zed which file types should display the run buttons. With the tags configured above, you'll see **play buttons in the gutter** of your JavaScript, TypeScript, and TSX test files.
+
+Click the button to run your tests with Bun:
 - Next to individual test functions (uses `$ZED_SYMBOL`)
-- At the top of test files (uses `$ZED_FILE`)
+- At the file level to run all tests in that file
 
-Click the button to run just that test or file, making test-driven development much faster.
+## Key Configuration Elements
 
-## Works With Other Runners
+- **`$ZED_RELATIVE_FILE`**: The current file path relative to the project root
+- **`$ZED_SYMBOL`**: The current symbol (test name) under the cursor
+- **`tags`**: Specifies which file types get the run buttons (crucial for making this work!)
 
-This pattern works with any test runner:
-
-**Jest/Vitest:**
-```json
-{
-  "label": "test $ZED_SYMBOL",
-  "command": "npm test -- -t '$ZED_SYMBOL'"
-}
-```
-
-**Rust:**
-```json
-{
-  "label": "test $ZED_SYMBOL",
-  "command": "cargo test $ZED_SYMBOL"
-}
-```
-
-The `$ZED_SYMBOL` and `$ZED_FILE` variables are automatically replaced with the current symbol name and file path!
+This pattern works with any test runner - just adjust the command and tags accordingly.
