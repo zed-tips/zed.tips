@@ -1,0 +1,77 @@
+---
+title: Open Local Terminals in Remote Projects
+subtitle: Run local build tools and scripts while working on remote projects
+category: productivity
+difficulty: intermediate
+tags:
+  - terminal
+  - remote
+  - dev-containers
+  - workflow
+author: baldwindavid
+authorUrl: https://github.com/baldwindavid
+---
+
+When working in remote projects (like Docker containers or SSH connections), you sometimes need to run local commands—build tools, scripts, or agents—without leaving your editor. Now you can open local terminals alongside your remote ones!
+
+## The Problem
+
+Before this feature, working in a remote project meant:
+- All terminals connected to the remote environment
+- Running local tools required separate terminal applications
+- Context switching between Zed and external terminals
+- Fragmented workflow across multiple windows
+
+## The Solution
+
+Add a `local` parameter to terminal commands to force a local shell, even in remote projects.
+
+## Configuration
+
+Add these keybindings to your `keymap.json`:
+
+```json
+{
+  "bindings": {
+    "cmd-t": "workspace::NewCenterTerminal",         // Remote terminal (default)
+    "cmd-T": ["workspace::NewCenterTerminal", { "local": true }]  // Local terminal
+  }
+},
+{
+  "context": "Terminal",
+  "bindings": {
+    "cmd-n": "workspace::NewTerminal",               // Remote terminal (default)
+    "cmd-N": ["workspace::NewTerminal", { "local": true }]  // Local terminal
+  }
+}
+```
+
+## Use Cases
+
+**Local build tools**: Run webpack, rollup, or other bundlers on your machine while editing remote files
+
+**Git operations**: Use local Git commands for repository management
+
+**Local scripts**: Execute automation scripts or deployment tools from your machine
+
+**Testing tools**: Run Playwright or Selenium tests locally while developing in a container
+
+**Package managers**: Install npm packages locally while the app runs remotely
+
+**File watchers**: Use local file watching tools that work better on your host machine
+
+## How It Works
+
+- **Default behavior unchanged**: Regular terminal commands still open remote terminals in remote projects
+- **Opt-in local shells**: Use the `local: true` parameter when you need a local environment
+- **Visual distinction**: Both terminal types in the same Zed window for easy switching
+- **Full keyboard access**: No need to reach for the mouse or switch apps
+
+## Perfect For
+
+- **Container development**: Work in Dev Containers while running local tools
+- **SSH workflows**: Edit remote files while managing local deployments
+- **Hybrid development**: Mix remote execution with local tooling
+- **Build pipelines**: Run local build steps for remotely-edited code
+
+No more juggling between Zed and external terminals—keep everything in one window!

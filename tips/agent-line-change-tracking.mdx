@@ -1,0 +1,48 @@
+---
+title: Track Code Changes Made by Agent
+subtitle: See exactly how many lines the agent added or removed in each file
+category: ai
+difficulty: beginner
+tags:
+  - agent
+  - ai
+  - diff
+  - code-review
+mediaType: image
+mediaUrl: https://github.com/user-attachments/assets/e3a4a14f-a4ee-4e95-a77b-86d14914e9d6
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+---
+
+The Agent panel now displays detailed statistics about code changes, showing you exactly how many lines were added and removed both per-file and in total across the entire thread.
+
+## What You'll See
+
+For each agent thread, you can view:
+
+- **Per-file statistics**: Lines added/removed for each modified file
+- **Total statistics**: Aggregate changes across all files in the thread
+- **Git-style diff metrics**: Same calculation logic used in Zed's commit view
+
+## Why It's Useful
+
+This feature helps you:
+
+- **Review changes at a glance**: Quickly understand the scope of agent modifications
+- **Track impact**: See which files had the most changes
+- **Verify correctness**: Spot unexpectedly large changes that might need review
+- **Learn agent behavior**: Understand how the agent approaches different tasks
+- **Make informed decisions**: Decide whether to accept or reject changes based on their scope
+
+## How It Works
+
+The statistics are calculated using the same logic as Zed's Git commit view, ensuring consistency across the editor. The counts automatically update as the agent makes changes during the conversation thread.
+
+## Perfect For
+
+- **Code reviews**: Quickly assess the magnitude of agent-proposed changes
+- **Refactoring tasks**: Track how much code is being reorganized
+- **Feature additions**: See the full scope of new functionality
+- **Bug fixes**: Understand the extent of corrections
+
+No configuration needed—this feature is automatically enabled in the agent panel!
