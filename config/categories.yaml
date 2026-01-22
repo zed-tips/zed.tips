@@ -24,3 +24,13 @@
   icon: 🧭
   iconName: compass
   order: 5
+- id: ai
+  title: AI & Agents
+  icon: 🤖
+  iconName: lightbulb
+  order: 6
+- id: git
+  title: Git & Version Control
+  icon: 🔀
+  iconName: badge-check
+  order: 7
