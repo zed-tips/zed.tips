@@ -1,0 +1,58 @@
+---
+title: Monitor Agent Performance with Turn Statistics
+subtitle: Track tokens, time, and turns in real-time for better AI interaction insights
+category: ai
+difficulty: beginner
+tags:
+  - agent
+  - ai
+  - performance
+  - monitoring
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+prUrl: https://github.com/zed-industries/zed/pull/46390
+---
+
+When working with the Agent panel, understanding the performance and cost of your AI interactions can be valuable. The **turn statistics** feature displays real-time metrics about your agent conversations.
+
+## What You'll See
+
+With turn statistics enabled, the agent panel displays:
+
+- **Timer**: How long the current operation has been running
+- **Token count**: Number of tokens used in the conversation
+- **Turn indicator**: Whose turn it is (you or the agent)
+
+This helps you:
+- Estimate costs based on token usage
+- Understand how "expensive" a request might be
+- Get a sense of how much effort the agent is putting into a task
+- Monitor performance in real-time
+
+## How to Enable
+
+Add this to your `settings.json`:
+
+```json
+{
+  "agent": {
+    "show_turn_stats": true
+  }
+}
+```
+
+By default, this setting is `false` to keep the interface clean. Enable it when you want detailed insights into your agent interactions.
+
+## Why It's Useful
+
+This feature originated from Claude Code and helps developers:
+- **Budget wisely**: Track token usage to manage API costs
+- **Optimize prompts**: See which interactions use more resources
+- **Debug issues**: Understand if the agent is working or stuck
+- **Learn patterns**: Notice which tasks require more tokens/time
+
+Perfect for power users who want visibility into their AI assistant's resource usage!
+
+---
+
+**Related PR**: [#46390](https://github.com/zed-industries/zed/pull/46390)

@@ -1,0 +1,83 @@
+---
+title: Display Pinned Tabs in a Separate Row
+subtitle: Give your working tabs full horizontal space by separating pinned tabs
+category: productivity
+difficulty: beginner
+tags:
+  - tabs
+  - workspace
+  - ui
+  - organization
+mediaType: video
+mediaUrl: https://github.com/user-attachments/assets/b1e52074-a5a1-4c4e-ad59-e55e2213509d
+author: yaroslavrick
+authorUrl: https://github.com/yaroslavrick
+prUrl: https://github.com/zed-industries/zed/pull/46573
+---
+
+When working with many pinned tabs, they can consume significant horizontal space, leaving little room for your active working tabs. The **separate row for pinned tabs** feature solves this by displaying pinned and unpinned tabs in two distinct rows.
+
+## The Problem
+
+With multiple pinned tabs in a single row:
+- Working tabs get squeezed and become hard to read
+- Constant scrolling to find active tabs
+- Tab names get truncated on smaller screens
+- Wasted horizontal space mixing two different types of tabs
+
+## The Solution
+
+Enable two-row tab layout to get:
+- **Top row**: All your pinned tabs (references, configs, important files)
+- **Bottom row**: Working tabs with full horizontal space
+- **Automatic switching**: Shows single row when only one type exists
+- **Familiar pattern**: Used by JetBrains IDEs, Visual Studio, and Eclipse
+
+## Configuration
+
+**Via Settings UI**:
+1. Open Settings (`Cmd-,` / `Ctrl-,`)
+2. Go to Editor section
+3. Toggle "Pinned Tabs Layout"
+
+**Via `settings.json`**:
+```json
+{
+  "tab_bar": {
+    "show_pinned_tabs_in_separate_row": true
+  }
+}
+```
+
+## Smart Behavior
+
+The layout adapts automatically:
+- **Both types present**: Two rows (pinned on top, unpinned on bottom)
+- **Only pinned tabs**: Single row
+- **Only unpinned tabs**: Single row
+- **Empty**: No tab bar clutter
+
+## Benefits
+
+**More readable tabs**: Full width for file names without truncation
+
+**Better organization**: Visual separation between reference and working files
+
+**Faster navigation**: Know exactly where to look for each type of tab
+
+**Maximized space**: No wasted horizontal real estate
+
+**Flexible workflow**: Adapts to your working style
+
+## Perfect For
+
+- **Reference-heavy work**: Keep docs, configs, and READMEs pinned
+- **Multi-file projects**: Work on many files simultaneously
+- **Small screens**: Make the most of limited horizontal space
+- **Tab enthusiasts**: Manage dozens of tabs without chaos
+
+This is an opt-in feature that defaults to `false`, so existing users see no change. Enable it when you need better tab organization!
+
+---
+
+**Related PR**: [#46573](https://github.com/zed-industries/zed/pull/46573)

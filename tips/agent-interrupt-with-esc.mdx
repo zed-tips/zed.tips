@@ -1,0 +1,59 @@
+---
+title: Interrupt Agent Threads with ESC
+subtitle: Press ESC anywhere in the agent panel to stop a running thread
+category: ai
+difficulty: beginner
+tags:
+  - agent
+  - ai
+  - keyboard-shortcuts
+  - workflow
+author: JosephTLyons
+authorUrl: https://github.com/JosephTLyons
+prUrl: https://github.com/zed-industries/zed/pull/46410
+---
+
+Need to stop an agent thread that's taking too long or heading in the wrong direction? You can now press `ESC` from anywhere in the agent panel to interrupt the running thread—no need to specifically focus the text input box.
+
+## How It Works
+
+**Before**: You had to click into the message editor and then press `ESC` to interrupt a thread.
+
+**Now**: Press `ESC` while focused anywhere in the agent panel conversation area to immediately stop the running thread.
+
+This works when:
+- Reading through the agent's response
+- Reviewing code changes
+- Scrolling through the conversation history
+- Anywhere else in the agent panel
+
+## When to Use It
+
+Interrupt a thread when you want to:
+
+- **Stop unnecessary work**: The agent is doing more than needed
+- **Change direction**: You realize you need a different approach
+- **Save tokens**: The response is getting too long or off-track
+- **Provide feedback**: You want to give the agent new instructions
+- **Cancel by mistake**: You started a thread unintentionally
+
+## Quick Workflow
+
+1. Ask the agent to do something
+2. Watch the response stream in
+3. If it's not what you want, just press `ESC`
+4. Provide new instructions or refine your request
+
+No more clicking around to find the input box—just hit `ESC` and you're in control!
+
+## Related Features
+
+- The terminal tool also captures output up to the point you stop it
+- The agent can see what was running when you interrupted
+- Stopping operations is now more responsive overall
+
+This small improvement makes working with agents feel much more natural and puts you in the driver's seat.
+
+---
+
+**Related PR**: [#46410](https://github.com/zed-industries/zed/pull/46410)
