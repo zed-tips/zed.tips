@@ -1,0 +1,154 @@
+---
+title: Auto-Generate Go Struct Tags
+subtitle: Instantly add JSON tags to Go structs with a single task
+category: productivity
+difficulty: intermediate
+tags:
+  - go
+  - golang
+  - tasks
+  - automation
+  - struct-tags
+author: FollowTheProcess
+authorUrl: https://github.com/FollowTheProcess
+---
+
+Tired of manually typing `json:"fieldName"` tags for every field in your Go structs? Use **gomodifytags** with a Zed task to automatically generate struct tags for any struct you're working on.
+
+## Prerequisites
+
+Install [gomodifytags](https://github.com/fatih/gomodifytags):
+
+```bash
+go install github.com/fatih/gomodifytags@latest
+```
+
+## Setup
+
+Add this task to your `tasks.json`:
+
+```json
+[
+  {
+    "label": "Go: Add Struct Tags",
+    "command": "gomodifytags",
+    "args": [
+      "-file",
+      "$ZED_FILE",
+      "-struct",
+      "$ZED_SYMBOL",
+      "-add-tags",
+      "json",
+      "-transform",
+      "camelcase",
+      "-skip-unexported",
+      "-quiet",
+      "-w"
+    ],
+    "reveal": "never",
+    "hide": "always",
+    "shell": {
+      "with_arguments": {
+        "program": "sh",
+        "args": ["--noediting", "--norc", "--noprofile"]
+      }
+    }
+  }
+]
+```
+
+## How to Use
+
+1. Place your cursor on a struct name
+2. Open the command palette (`Cmd-Shift-P` / `Ctrl-Shift-P`)
+3. Search for "Go: Add Struct Tags"
+4. Run the task
+
+The tool will automatically add JSON tags to all exported fields:
+
+**Before:**
+```go
+type User struct {
+    ID        int
+    FirstName string
+    LastName  string
+    Email     string
+}
+```
+
+**After:**
+```go
+type User struct {
+    ID        int    `json:"id"`
+    FirstName string `json:"firstName"`
+    LastName  string `json:"lastName"`
+    Email     string `json:"email"`
+}
+```
+
+## Customization
+
+### Add Different Tags
+
+Change the `-add-tags` parameter to add other tag types:
+
+```json
+"-add-tags", "json,yaml,db"
+```
+
+This generates:
+```go
+`json:"firstName" yaml:"firstName" db:"first_name"`
+```
+
+### Change Naming Convention
+
+Modify the `-transform` parameter:
+- `camelcase` → `firstName`
+- `snakecase` → `first_name`
+- `lispcase` → `first-name`
+
+### Remove Tags
+
+Create a separate task with `-remove-tags` instead of `-add-tags`:
+
+```json
+{
+  "label": "Go: Remove Struct Tags",
+  "command": "gomodifytags",
+  "args": [
+    "-file", "$ZED_FILE",
+    "-struct", "$ZED_SYMBOL",
+    "-remove-tags", "json",
+    "-quiet", "-w"
+  ]
+}
+```
+
+## Benefits
+
+**Time saver**: No more manual tag typing
+
+**Consistency**: All tags follow the same naming convention
+
+**Error prevention**: Avoids typos in field names
+
+**Flexible**: Works with any struct, any tag type
+
+## Optional Keybinding
+
+Add a keybinding for even faster access:
+
+```json
+{
+  "bindings": {
+    "cmd-shift-t": ["task::Spawn", { "task_name": "Go: Add Struct Tags" }]
+  }
+}
+```
+
+Perfect for Go developers who work with JSON APIs, databases, or configuration files!
+
+---
+
+**Community Tip**: Shared by [FollowTheProcess](https://github.com/FollowTheProcess) in [Hidden Gems: Community Edition](https://github.com/zed-industries/zed/discussions/39680)

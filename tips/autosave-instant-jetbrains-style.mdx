@@ -1,0 +1,134 @@
+---
+title: Instant Auto-Save Like JetBrains IDEs
+subtitle: Save files immediately on every change without any delay
+category: productivity
+difficulty: beginner
+tags:
+  - autosave
+  - config
+  - workflow
+  - jetbrains
+author: k3rn31
+authorUrl: https://github.com/k3rn31
+---
+
+If you're coming from JetBrains IDEs (IntelliJ, WebStorm, PyCharm) and miss the instant auto-save behavior, you can configure Zed to save files immediately on every keystroke—no delays, no focus changes required.
+
+## The Difference
+
+**Default Zed behavior**: Files auto-save after you stop typing for a moment or when you change focus.
+
+**JetBrains style**: Files save instantly after every change, whether you change focus or not.
+
+## Configuration
+
+Add this to your `settings.json`:
+
+```json
+{
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 0
+    }
+  }
+}
+```
+
+That's it! Now every keystroke is instantly saved to disk.
+
+## When to Use This
+
+This works great if you:
+
+- **Trust your auto-formatters**: Files are saved before formatting, so you see formatted code immediately
+- **Use file watchers**: Tools like webpack, vite, or nodemon pick up changes instantly
+- **Never worry about unsaved changes**: No more "Save changes?" dialogs
+- **Work with external tools**: Other tools always see the latest file version
+
+## Comparison with Other Auto-Save Options
+
+### Focus Change (Default)
+```json
+{
+  "autosave": "on_focus_change"
+}
+```
+✅ Saves only when you switch files or apps
+❌ Doesn't save while you're actively editing
+
+### After Delay (JetBrains Style)
+```json
+{
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 0
+    }
+  }
+}
+```
+✅ Saves immediately after every change
+✅ Works even if you stay in the same file
+⚠️ More disk writes (usually not a problem on modern SSDs)
+
+### Delayed Save (Balanced)
+```json
+{
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000
+    }
+  }
+}
+```
+✅ Saves after 1 second of inactivity
+✅ Fewer disk writes than instant save
+❌ Small delay before changes are saved
+
+## Benefits
+
+**No manual saves**: Never press `Cmd-S` / `Ctrl-S` again
+
+**Immediate feedback**: See formatter and linter results right away
+
+**Peace of mind**: Your work is always saved
+
+**Familiar**: Works like the IDEs you're used to
+
+## Potential Downsides
+
+- **More disk writes**: Every keystroke triggers a save (modern SSDs handle this easily)
+- **Formatter triggers**: If you have format-on-save enabled, it runs on every change (you might want to disable this)
+
+## Related Settings
+
+You might also want to adjust format-on-save behavior:
+
+```json
+{
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 0
+    }
+  },
+  "format_on_save": "off"  // Format manually instead
+}
+```
+
+Or keep format-on-save but add a small delay:
+
+```json
+{
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 500
+    }
+  },
+  "format_on_save": "on"
+}
+```
+
+This gives you a half-second buffer to type before the formatter runs, reducing unnecessary formatting operations while still providing quick saves.
+
+---
+
+**Community Tip**: Shared by [k3rn31](https://github.com/k3rn31) in [Hidden Gems: Community Edition](https://github.com/zed-industries/zed/discussions/39680)
