@@ -16,6 +16,7 @@
     "author": "Zed Tips",
     "license": "MIT",
     "dependencies": {
+        "glob": "^13.0.0",
         "gray-matter": "^4.0.3",
         "js-yaml": "^4.1.0",
         "opendal": "^0.49.2",
