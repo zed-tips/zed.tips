@@ -11,14 +11,12 @@ import { Operator } from 'opendal';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// R2 Configuration from environment variables
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
 const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'zed-tips-media';
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL; // e.g., https://media.zed.tips
 
-// Validate required environment variables
 function validateEnv() {
   const missing = [];
   if (!R2_ACCOUNT_ID) missing.push('R2_ACCOUNT_ID');
