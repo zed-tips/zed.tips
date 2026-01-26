@@ -41,8 +41,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Github action"
+          git config user.email "bot@zedtips.com"
 
       - name: Get changed files
         id: changed-files
