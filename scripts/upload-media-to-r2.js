@@ -195,15 +195,16 @@ async function main() {
   // Validate environment
   validateEnv();
 
-  // Get changed files from environment
-  let changedFiles = process.env.CHANGED_FILES?.trim().split(/\s+/).filter(Boolean);
+  // Get files from CLI arguments (passed after --)
+  const args = process.argv.slice(2);
+  const filesToProcess = args.filter(file => file.match(/tips\/.*\.(md|mdx)$/));
 
-  if (!changedFiles || changedFiles.length === 0) {
+  if (filesToProcess.length === 0) {
     console.log('✅ No tip files to process');
     process.exit(0);
   }
 
-  console.log(`Found ${changedFiles.length} file(s) to process`);
+  console.log(`Found ${filesToProcess.length} file(s) to process`);
 
   // Create OpenDAL operator for R2
   const operator = createR2Operator();
@@ -212,7 +213,7 @@ async function main() {
   const errors = [];
 
   // Process each file
-  for (const file of changedFiles) {
+  for (const file of filesToProcess) {
     try {
       const wasUploaded = await processFile(operator, file);
       if (wasUploaded) {
@@ -225,7 +226,7 @@ async function main() {
 
   // Summary
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`✅ Processed ${changedFiles.length} file(s), uploaded ${uploadedCount} media file(s)`);
+  console.log(`✅ Processed ${filesToProcess.length} file(s), uploaded ${uploadedCount} media file(s)`);
 
   if (errors.length > 0) {
     console.log(`\n❌ Errors encountered:`);

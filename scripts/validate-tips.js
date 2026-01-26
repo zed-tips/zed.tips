@@ -3,13 +3,11 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
 import matter from 'gray-matter';
 import { z } from 'zod';
 import yaml from 'js-yaml';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const tipsDir = path.join(__dirname, '../tips');
 const configDir = path.join(__dirname, '../config');
 
 function loadConfigIds(filename) {
@@ -52,41 +50,13 @@ const tipsSchema = z.object({
 });
 
 /**
- * Get all tips files in the tips directory
- * @returns {string[]} Array of file paths
+ * Get files from CLI arguments
+ * @returns {string[]} Array of file paths to validate
  */
-function getAllTipsFiles() {
-  if (!fs.existsSync(tipsDir)) {
-    return [];
-  }
-
-  return fs.readdirSync(tipsDir)
-    .filter(file => file.match(/\.(md|mdx)$/))
-    .map(file => path.join('tips', file));
-}
-
-/**
- * Get changed files from git diff, fallback to all files if git is unavailable
- * @returns {string[]} Array of file paths
- */
-function getChangedFiles() {
-  try {
-    const output = execSync('git diff --name-only origin/main...HEAD', {
-      encoding: 'utf-8',
-      stdio: ['pipe', 'pipe', 'pipe'],
-    }).trim();
-
-    if (!output) {
-      return [];
-    }
-
-    return output
-      .split('\n')
-      .filter(file => file.match(/tips\/.*\.(md|mdx)$/));
-  } catch (error) {
-    console.warn('Warning: Could not get git diff, validating all files in tips directory');
-    return getAllTipsFiles();
-  }
+function getFilesToValidate() {
+  // Get files from CLI arguments (passed after --)
+  const args = process.argv.slice(2);
+  return args.filter(file => file.match(/tips\/.*\.(md|mdx)$/));
 }
 
 /**
@@ -165,16 +135,16 @@ function validateTipFile(filepath) {
 function main() {
   console.log('🔍 Validating tips format...\n');
 
-  const changedFiles = getChangedFiles();
+  const filesToValidate = getFilesToValidate();
 
-  if (changedFiles.length === 0) {
+  if (filesToValidate.length === 0) {
     console.log('✅ No tips files to validate');
     process.exit(0);
   }
 
-  console.log(`Found ${changedFiles.length} tip file(s) to validate:\n`);
+  console.log(`Found ${filesToValidate.length} tip file(s) to validate:\n`);
 
-  const results = changedFiles.map(file => ({
+  const results = filesToValidate.map(file => ({
     file,
     ...validateTipFile(file)
   }));
@@ -196,7 +166,7 @@ function main() {
     console.log(`❌ Validation failed for ${failedCount} file(s)`);
     process.exit(1);
   } else {
-    console.log(`✅ All ${changedFiles.length} file(s) passed validation`);
+    console.log(`✅ All ${filesToValidate.length} file(s) passed validation`);
     process.exit(0);
   }
 }

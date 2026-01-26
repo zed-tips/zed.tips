@@ -1,4 +1,4 @@
-name: Auto-add Metadata
+name: Validate And Auto-add Metadata
 
 on:
   # For PRs from the main repository (not forks)
@@ -81,14 +81,14 @@ jobs:
         id: changed-files
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            # For PR, get files changed in the PR
-            FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD | grep "^tips/.*\.\(md\|mdx\)$" | tr '\n' ' ' || true)
+            # For PR, get files changed in the PR (exclude deleted files)
+            FILES=$(git diff --name-status origin/${{ github.event.pull_request.base.ref }}...HEAD | awk '$1 != "D" && $NF ~ /^tips\/.*\.(md|mdx)$/ {print $NF}' | tr '\n' ' ' || true)
           else
-            # For push event, get files changed in the push
+            # For push event, get files changed in the push (exclude deleted files)
             if [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
-              FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep "^tips/.*\.\(md\|mdx\)$" | tr '\n' ' ' || true)
+              FILES=$(git diff --name-status ${{ github.event.before }} ${{ github.event.after }} | awk '$1 != "D" && $NF ~ /^tips\/.*\.(md|mdx)$/ {print $NF}' | tr '\n' ' ' || true)
             else
-              FILES=$(git diff-tree --no-commit-id --name-only -r HEAD | grep "^tips/.*\.\(md\|mdx\)$" | tr '\n' ' ' || true)
+              FILES=$(git diff-tree --no-commit-id --name-status -r HEAD | awk '$1 != "D" && $NF ~ /^tips\/.*\.(md|mdx)$/ {print $NF}' | tr '\n' ' ' || true)
             fi
           fi
           echo "files=$FILES" >> $GITHUB_OUTPUT
@@ -96,25 +96,21 @@ jobs:
 
       - name: Validate tips
         if: steps.changed-files.outputs.files != ''
-        run: pnpm validate:tips
-        continue-on-error: false
+        run: pnpm validate:tips -- ${{ steps.changed-files.outputs.files }}
 
       - name: Auto-add metadata
         if: steps.changed-files.outputs.files != ''
-        env:
-          CHANGED_FILES: ${{ steps.changed-files.outputs.files }}
-        run: pnpm auto-add:metadata
+        run: pnpm auto-add:metadata -- ${{ steps.changed-files.outputs.files }}
 
       - name: Upload media to R2
         if: steps.changed-files.outputs.files != ''
         env:
-          CHANGED_FILES: ${{ steps.changed-files.outputs.files }}
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
           R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
-        run: pnpm upload:media
+        run: pnpm upload:media -- ${{ steps.changed-files.outputs.files }}
 
       - name: Check for changes
         id: check-changes
