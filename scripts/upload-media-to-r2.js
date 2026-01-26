@@ -53,6 +53,7 @@ function createR2Operator() {
 
 /**
  * Download a file from URL
+ * @returns {Promise<{buffer: Buffer, contentType: string}>}
  */
 async function downloadFile(url) {
   return new Promise((resolve, reject) => {
@@ -74,42 +75,61 @@ async function downloadFile(url) {
 
       const chunks = [];
       response.on('data', (chunk) => chunks.push(chunk));
-      response.on('end', () => resolve(Buffer.concat(chunks)));
+      response.on('end', () => {
+        const buffer = Buffer.concat(chunks);
+        const contentType = response.headers['content-type'] || 'application/octet-stream';
+        resolve({ buffer, contentType });
+      });
       response.on('error', reject);
     }).on('error', reject);
   });
 }
 
 /**
- * Get content type from URL
+ * Get file extension from content type
  */
-function getContentType(url) {
-  const ext = path.extname(new URL(url).pathname).toLowerCase();
-  const contentTypes = {
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.gif': 'image/gif',
-    '.webp': 'image/webp',
-    '.svg': 'image/svg+xml',
-    '.mp4': 'video/mp4',
-    '.webm': 'video/webm',
-    '.mov': 'video/quicktime',
+function getExtensionFromContentType(contentType) {
+  // Remove charset and other parameters
+  const mimeType = contentType.split(';')[0].trim().toLowerCase();
+
+  const extensionMap = {
+    'image/jpeg': '.jpg',
+    'image/jpg': '.jpg',
+    'image/png': '.png',
+    'image/gif': '.gif',
+    'image/webp': '.webp',
+    'image/svg+xml': '.svg',
+    'video/mp4': '.mp4',
+    'video/webm': '.webm',
+    'video/quicktime': '.mov',
   };
 
-  return contentTypes[ext] || 'application/octet-stream';
+  return extensionMap[mimeType] || '.bin';
 }
 
 /**
- * Generate a unique filename for the media file
+ * Generate a unique filename for the media file with date-based path
+ * Format: /YYYY-MM-DD/tipname-hash.ext
  */
-function generateFilename(originalUrl, tipFilename) {
+function generateFilename(originalUrl, tipFilename, contentType) {
   const url = new URL(originalUrl);
-  const ext = path.extname(url.pathname) || '.jpg';
+  // Try to get extension from URL first, fallback to content type
+  let ext = path.extname(url.pathname).toLowerCase();
+  if (!ext) {
+    ext = getExtensionFromContentType(contentType);
+  }
+
   const tipName = path.basename(tipFilename, path.extname(tipFilename));
   const hash = crypto.createHash('md5').update(originalUrl).digest('hex').substring(0, 8);
 
-  return `${tipName}-${hash}${ext}`;
+  // Get current date for directory structure
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const dateDir = `${year}-${month}-${day}`;
+
+  return `${dateDir}/${tipName}-${hash}${ext}`;
 }
 
 /**
@@ -159,12 +179,11 @@ async function processFile(operator, filepath) {
     }
 
     console.log(`  📥 Downloading: ${frontMatter.mediaUrl}`);
-    const buffer = await downloadFile(frontMatter.mediaUrl);
+    const { buffer, contentType } = await downloadFile(frontMatter.mediaUrl);
 
-    const contentType = getContentType(frontMatter.mediaUrl);
-    const filename = generateFilename(frontMatter.mediaUrl, filepath);
+    const filename = generateFilename(frontMatter.mediaUrl, filepath, contentType);
 
-    console.log(`  📤 Uploading to R2: ${filename} (${(buffer.length / 1024).toFixed(2)} KB)`);
+    console.log(`  📤 Uploading to R2: ${filename} (${(buffer.length / 1024).toFixed(2)} KB, ${contentType})`);
     const r2Url = await uploadToR2(operator, buffer, filename, contentType);
 
     // Update frontmatter
