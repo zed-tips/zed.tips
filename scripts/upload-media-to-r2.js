@@ -86,6 +86,57 @@ async function downloadFile(url) {
 }
 
 /**
+ * Detect file type from magic bytes (file signature)
+ */
+function detectFileTypeFromBuffer(buffer) {
+  // Check first few bytes for known file signatures
+  const bytes = buffer.slice(0, 12);
+
+  // PNG: 89 50 4E 47
+  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) {
+    return { ext: '.png', contentType: 'image/png' };
+  }
+
+  // JPEG: FF D8 FF
+  if (bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF) {
+    return { ext: '.jpg', contentType: 'image/jpeg' };
+  }
+
+  // GIF: 47 49 46 38
+  if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) {
+    return { ext: '.gif', contentType: 'image/gif' };
+  }
+
+  // WebP: 52 49 46 46 ... 57 45 42 50
+  if (bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
+    bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) {
+    return { ext: '.webp', contentType: 'image/webp' };
+  }
+
+  // MP4/MOV: Check for ftyp
+  if (bytes[4] === 0x66 && bytes[5] === 0x74 && bytes[6] === 0x79 && bytes[7] === 0x70) {
+    const brand = buffer.slice(8, 12).toString('ascii').trim();
+    // QuickTime: ftyp qt
+    if (brand === 'qt' || brand.startsWith('qt')) {
+      return { ext: '.mov', contentType: 'video/quicktime' };
+    }
+    // MP4: ftyp isom, mp42, etc.
+    if (brand.startsWith('isom') || brand.startsWith('mp4') || brand.startsWith('M4V')) {
+      return { ext: '.mp4', contentType: 'video/mp4' };
+    }
+    // Default to mp4 for other ftyp
+    return { ext: '.mp4', contentType: 'video/mp4' };
+  }
+
+  // WebM: 1A 45 DF A3
+  if (bytes[0] === 0x1A && bytes[1] === 0x45 && bytes[2] === 0xDF && bytes[3] === 0xA3) {
+    return { ext: '.webm', contentType: 'video/webm' };
+  }
+
+  return null;
+}
+
+/**
  * Get file extension from content type
  */
 function getExtensionFromContentType(contentType) {
@@ -111,12 +162,21 @@ function getExtensionFromContentType(contentType) {
  * Generate a unique filename for the media file with date-based path
  * Format: /YYYY-MM-DD/tipname-hash.ext
  */
-function generateFilename(originalUrl, tipFilename, contentType) {
+function generateFilename(originalUrl, tipFilename, buffer, contentType) {
   const url = new URL(originalUrl);
-  // Try to get extension from URL first, fallback to content type
-  let ext = path.extname(url.pathname).toLowerCase();
-  if (!ext) {
-    ext = getExtensionFromContentType(contentType);
+
+  // Priority 1: Detect from file content (magic bytes) - most reliable
+  const detected = detectFileTypeFromBuffer(buffer);
+  let ext;
+  if (detected) {
+    ext = detected.ext;
+  } else {
+    // Priority 2: Get from URL path extension
+    ext = path.extname(url.pathname).toLowerCase();
+    if (!ext) {
+      // Priority 3: Fallback to Content-Type header
+      ext = getExtensionFromContentType(contentType);
+    }
   }
 
   const tipName = path.basename(tipFilename, path.extname(tipFilename));
@@ -181,9 +241,13 @@ async function processFile(operator, filepath) {
     console.log(`  📥 Downloading: ${frontMatter.mediaUrl}`);
     const { buffer, contentType } = await downloadFile(frontMatter.mediaUrl);
 
-    const filename = generateFilename(frontMatter.mediaUrl, filepath, contentType);
+    const filename = generateFilename(frontMatter.mediaUrl, filepath, buffer, contentType);
 
-    console.log(`  📤 Uploading to R2: ${filename} (${(buffer.length / 1024).toFixed(2)} KB, ${contentType})`);
+    // Show detected file type
+    const detected = detectFileTypeFromBuffer(buffer);
+    const detectedType = detected ? `${detected.contentType} (detected)` : contentType;
+
+    console.log(`  📤 Uploading to R2: ${filename} (${(buffer.length / 1024).toFixed(2)} KB, ${detectedType})`);
     const r2Url = await uploadToR2(operator, buffer, filename, contentType);
 
     // Update frontmatter
