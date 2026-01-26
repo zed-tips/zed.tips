@@ -8,17 +8,83 @@ importers:
 
   .:
     dependencies:
+      glob:
+        specifier: ^13.0.0
+        version: 13.0.0
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.1
+      opendal:
+        specifier: ^0.49.2
+        version: 0.49.2
       zod:
         specifier: ^3.25.0
         version: 3.25.76
 
 packages:
+
+  '@isaacs/balanced-match@4.0.1':
+    resolution: {integrity: sha512-yzMTt9lEb8Gv7zRioUilSglI0c0smZ9k5D65677DLWLtWJaXIS3CqcGyUFByYKlnUj6TkjLVs54fBl6+TiGQDQ==}
+    engines: {node: 20 || >=22}
+
+  '@isaacs/brace-expansion@5.0.0':
+    resolution: {integrity: sha512-ZT55BDLV0yv0RBm2czMiZ+SqCGO7AvmOM3G/w2xhVPH+te0aKgFjmBvGlL1dH+ql2tgGO3MVrbb3jCKyvpgnxA==}
+    engines: {node: 20 || >=22}
+
+  '@opendal/lib-darwin-arm64@0.49.2':
+    resolution: {integrity: sha512-Yg+d24uWV57/iGkbqf0XAOcJVpoxFbnQa5gjhBHhRiJPK4j3Aer6QenKImeW3BO96GY5TZ2GLv6GOijcUBjSxA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@opendal/lib-darwin-x64@0.49.2':
+    resolution: {integrity: sha512-arlAgDMtuaYKw6QS2szDamIbZ6ti3iUWF7piaTg9740uBvtJHi4Mqj6bqxmYAFcW08vWdugsbLrpPntkIaDcVA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@opendal/lib-linux-arm64-gnu@0.49.2':
+    resolution: {integrity: sha512-U8TkDGrKbeccpXw40E3oSv4aboqkOCUq2Hwfz9nt4Nw7FpscV7SIJqE9cAbz/a3lWZ3s6msE8nsAHfBn8jq/Yg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@opendal/lib-linux-arm64-musl@0.49.2':
+    resolution: {integrity: sha512-vvg1LCXBUjARrp0UaL/2lnbK1LajlWbAez4ZHZmTAoMRStYoWSCAzip3euMCHBHjrBrDvrS6eJyLeD0X/R+izw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@opendal/lib-linux-x64-gnu@0.49.2':
+    resolution: {integrity: sha512-mS5Jc7PvRO42xf9ASTyTJr1bEhsbsSPihMnDAZONkWa9njl8ux3F1T6AghLLwdPOkTvst9VH7likDDrj+6gcCA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@opendal/lib-linux-x64-musl@0.49.2':
+    resolution: {integrity: sha512-4b4r5pjVyZqkCDrgm1c0A9UWZaC8djTSSGpNuVEkvzf3COBuwpKu/7nWNWWefk+7JJtuHsVatR62Fzfl0fSJ4Q==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@opendal/lib-win32-arm64-msvc@0.49.2':
+    resolution: {integrity: sha512-/p/lylG0V+kN4YcmgTWXQlOAOuDt7gLLZBBkAC1BqoCOuguyWTFIAgNOjf5faw6fnMkUZfe8Mj/Sg+xr6LWoMg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@opendal/lib-win32-x64-msvc@0.49.2':
+    resolution: {integrity: sha512-b9FLXpz3sygHso9csRGX7eLOlwhnHwDlQmlAQGlgodLuAaRpCZAFtamwxC7ocd5F7DttL30vmdJJDPi9UU7Gxg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
 
   argparse@1.0.10:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
@@ -34,6 +100,10 @@ packages:
   extend-shallow@2.0.1:
     resolution: {integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==}
     engines: {node: '>=0.10.0'}
+
+  glob@13.0.0:
+    resolution: {integrity: sha512-tvZgpqk6fz4BaNZ66ZsRaZnbHvP/jG3uKJvAZOwEVUL4RTA5nJeeLYfyN9/VA8NX/V3IBG+hkeuGpKjvELkVhA==}
+    engines: {node: 20 || >=22}
 
   gray-matter@4.0.3:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
@@ -55,6 +125,26 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
+  lru-cache@11.2.5:
+    resolution: {integrity: sha512-vFrFJkWtJvJnD5hg+hJvVE8Lh/TcMzKnTgCWmtBipwI5yLX/iX+5UB2tfuyODF5E7k9xEzMdYgGqaSb1c0c5Yw==}
+    engines: {node: 20 || >=22}
+
+  minimatch@10.1.1:
+    resolution: {integrity: sha512-enIvLvRAFZYXJzkCYG5RKmPfrFArdLv+R+lbQ53BmIMLIry74bjKzX6iHAm8WYamJkhSSEabrWN5D97XnKObjQ==}
+    engines: {node: 20 || >=22}
+
+  minipass@7.1.2:
+    resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
+    engines: {node: '>=16 || 14 >=14.17'}
+
+  opendal@0.49.2:
+    resolution: {integrity: sha512-FZxLgJSssYUZSgLD66nQgaieHhfWpK9D/BCaS7lCUWR5pDYsYTJqCm1rbL0/jwwOMmNUhz0g49LMY8OnHOd5Ng==}
+    engines: {node: '>= 10'}
+
+  path-scurry@2.0.1:
+    resolution: {integrity: sha512-oWyT4gICAu+kaA7QWk/jvCHWarMKNs6pXOGWKDTr7cw4IGcUbW+PeTfbaQiLGheFRpjo6O9J0PmyMfQPjH71oA==}
+    engines: {node: 20 || >=22}
+
   section-matter@1.0.0:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
     engines: {node: '>=4'}
@@ -71,6 +161,36 @@ packages:
 
 snapshots:
 
+  '@isaacs/balanced-match@4.0.1': {}
+
+  '@isaacs/brace-expansion@5.0.0':
+    dependencies:
+      '@isaacs/balanced-match': 4.0.1
+
+  '@opendal/lib-darwin-arm64@0.49.2':
+    optional: true
+
+  '@opendal/lib-darwin-x64@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-arm64-gnu@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-arm64-musl@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-x64-gnu@0.49.2':
+    optional: true
+
+  '@opendal/lib-linux-x64-musl@0.49.2':
+    optional: true
+
+  '@opendal/lib-win32-arm64-msvc@0.49.2':
+    optional: true
+
+  '@opendal/lib-win32-x64-msvc@0.49.2':
+    optional: true
+
   argparse@1.0.10:
     dependencies:
       sprintf-js: 1.0.3
@@ -82,6 +202,12 @@ snapshots:
   extend-shallow@2.0.1:
     dependencies:
       is-extendable: 0.1.1
+
+  glob@13.0.0:
+    dependencies:
+      minimatch: 10.1.1
+      minipass: 7.1.2
+      path-scurry: 2.0.1
 
   gray-matter@4.0.3:
     dependencies:
@@ -102,6 +228,30 @@ snapshots:
       argparse: 2.0.1
 
   kind-of@6.0.3: {}
+
+  lru-cache@11.2.5: {}
+
+  minimatch@10.1.1:
+    dependencies:
+      '@isaacs/brace-expansion': 5.0.0
+
+  minipass@7.1.2: {}
+
+  opendal@0.49.2:
+    optionalDependencies:
+      '@opendal/lib-darwin-arm64': 0.49.2
+      '@opendal/lib-darwin-x64': 0.49.2
+      '@opendal/lib-linux-arm64-gnu': 0.49.2
+      '@opendal/lib-linux-arm64-musl': 0.49.2
+      '@opendal/lib-linux-x64-gnu': 0.49.2
+      '@opendal/lib-linux-x64-musl': 0.49.2
+      '@opendal/lib-win32-arm64-msvc': 0.49.2
+      '@opendal/lib-win32-x64-msvc': 0.49.2
+
+  path-scurry@2.0.1:
+    dependencies:
+      lru-cache: 11.2.5
+      minipass: 7.1.2
 
   section-matter@1.0.0:
     dependencies:

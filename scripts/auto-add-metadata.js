@@ -73,13 +73,11 @@ function addMetadataToFile(filepath) {
       changes.push(`Added publishedAt: ${frontMatter.publishedAt}`);
     }
 
-    // Always update updatedAt
+    // Always update updatedAt to current date
     const newUpdatedAt = getCurrentDate();
-    if (frontMatter.updatedAt !== newUpdatedAt) {
-      frontMatter.updatedAt = newUpdatedAt;
-      modified = true;
-      changes.push(`Updated updatedAt: ${newUpdatedAt}`);
-    }
+    frontMatter.updatedAt = newUpdatedAt;
+    modified = true;
+    changes.push(`Updated updatedAt: ${newUpdatedAt}`);
 
     // Add author only if missing
     if (!frontMatter.author) {
@@ -122,25 +120,27 @@ function addMetadataToFile(filepath) {
 function main() {
   console.log('🤖 Auto-adding metadata fields...\n');
 
-  let changedFiles = process.env.CHANGED_FILES?.trim().split(/\s+/).filter(Boolean);
+  // Get files from CLI arguments (passed after --)
+  const args = process.argv.slice(2);
+  const filesToProcess = args.filter(file => file.match(/tips\/.*\.(md|mdx)$/));
 
-  if (!changedFiles || changedFiles.length === 0) {
+  if (filesToProcess.length === 0) {
     console.log('✅ No tip files to process');
     process.exit(0);
   }
 
-  console.log(`Found ${changedFiles.length} file(s) to process`);
+  console.log(`Found ${filesToProcess.length} file(s) to process`);
 
   let modifiedCount = 0;
 
-  changedFiles.forEach(file => {
+  filesToProcess.forEach(file => {
     if (addMetadataToFile(file)) {
       modifiedCount++;
     }
   });
 
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`✅ Processed ${changedFiles.length} file(s), modified ${modifiedCount}`);
+  console.log(`✅ Processed ${filesToProcess.length} file(s), modified ${modifiedCount}`);
   process.exit(0);
 }
 

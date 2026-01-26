@@ -5,7 +5,8 @@
     "type": "module",
     "scripts": {
         "validate:tips": "node scripts/validate-tips.js",
-        "auto-add:metadata": "node scripts/auto-add-metadata.js"
+        "auto-add:metadata": "node scripts/auto-add-metadata.js",
+        "upload:media": "node scripts/upload-media-to-r2.js"
     },
     "keywords": [
         "zed",
@@ -15,8 +16,10 @@
     "author": "Zed Tips",
     "license": "MIT",
     "dependencies": {
+        "glob": "^13.0.0",
         "gray-matter": "^4.0.3",
         "js-yaml": "^4.1.0",
+        "opendal": "^0.49.2",
         "zod": "^3.25.0"
     }
 }

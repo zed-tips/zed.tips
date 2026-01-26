@@ -1,0 +1,325 @@
+#!/usr/bin/env node
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import https from 'https';
+import http from 'http';
+import crypto from 'crypto';
+import matter from 'gray-matter';
+import { Operator } from 'opendal';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID;
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'zed-tips-media';
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL; // e.g., https://media.zed.tips
+
+function validateEnv() {
+  const missing = [];
+  if (!R2_ACCOUNT_ID) missing.push('R2_ACCOUNT_ID');
+  if (!R2_ACCESS_KEY_ID) missing.push('R2_ACCESS_KEY_ID');
+  if (!R2_SECRET_ACCESS_KEY) missing.push('R2_SECRET_ACCESS_KEY');
+  if (!R2_PUBLIC_URL) missing.push('R2_PUBLIC_URL');
+
+  if (missing.length > 0) {
+    console.error(`❌ Missing required environment variables: ${missing.join(', ')}`);
+    console.error('\nPlease configure the following in your GitHub secrets:');
+    console.error('  - R2_ACCOUNT_ID: Your Cloudflare account ID');
+    console.error('  - R2_ACCESS_KEY_ID: Your R2 access key ID');
+    console.error('  - R2_SECRET_ACCESS_KEY: Your R2 secret access key');
+    console.error('  - R2_PUBLIC_URL: Your R2 bucket public URL (e.g., https://media.zed.tips)');
+    console.error('  - R2_BUCKET_NAME (optional): Your R2 bucket name (default: zed-tips-media)');
+    process.exit(1);
+  }
+}
+
+// Initialize OpenDAL operator for R2
+// See https://docs.rs/opendal/latest/opendal/services/struct.S3.html#configuration
+function createR2Operator() {
+  return new Operator('s3', {
+    access_key_id: R2_ACCESS_KEY_ID,
+    secret_access_key: R2_SECRET_ACCESS_KEY,
+    bucket: R2_BUCKET_NAME,
+    endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    root: '/',
+    region: 'auto',
+    // Disable loading config from ~/.aws/credentials to prevent X-Amz-Security-Token issues
+    disable_config_load: 'true',
+  });
+}
+
+/**
+ * Download a file from URL
+ * @returns {Promise<{buffer: Buffer, contentType: string}>}
+ */
+async function downloadFile(url) {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https') ? https : http;
+
+    client.get(url, (response) => {
+      if (response.statusCode === 301 || response.statusCode === 302) {
+        // Handle redirects
+        downloadFile(response.headers.location)
+          .then(resolve)
+          .catch(reject);
+        return;
+      }
+
+      if (response.statusCode !== 200) {
+        reject(new Error(`Failed to download: ${response.statusCode} ${response.statusMessage}`));
+        return;
+      }
+
+      const chunks = [];
+      response.on('data', (chunk) => chunks.push(chunk));
+      response.on('end', () => {
+        const buffer = Buffer.concat(chunks);
+        const contentType = response.headers['content-type'] || 'application/octet-stream';
+        resolve({ buffer, contentType });
+      });
+      response.on('error', reject);
+    }).on('error', reject);
+  });
+}
+
+/**
+ * Detect file type from magic bytes (file signature)
+ */
+function detectFileTypeFromBuffer(buffer) {
+  // Check first few bytes for known file signatures
+  const bytes = buffer.slice(0, 12);
+
+  // PNG: 89 50 4E 47
+  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) {
+    return { ext: '.png', contentType: 'image/png' };
+  }
+
+  // JPEG: FF D8 FF
+  if (bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF) {
+    return { ext: '.jpg', contentType: 'image/jpeg' };
+  }
+
+  // GIF: 47 49 46 38
+  if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) {
+    return { ext: '.gif', contentType: 'image/gif' };
+  }
+
+  // WebP: 52 49 46 46 ... 57 45 42 50
+  if (bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
+    bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) {
+    return { ext: '.webp', contentType: 'image/webp' };
+  }
+
+  // MP4/MOV: Check for ftyp
+  if (bytes[4] === 0x66 && bytes[5] === 0x74 && bytes[6] === 0x79 && bytes[7] === 0x70) {
+    const brand = buffer.slice(8, 12).toString('ascii').trim();
+    // QuickTime: ftyp qt
+    if (brand === 'qt' || brand.startsWith('qt')) {
+      return { ext: '.mov', contentType: 'video/quicktime' };
+    }
+    // MP4: ftyp isom, mp42, etc.
+    if (brand.startsWith('isom') || brand.startsWith('mp4') || brand.startsWith('M4V')) {
+      return { ext: '.mp4', contentType: 'video/mp4' };
+    }
+    // Default to mp4 for other ftyp
+    return { ext: '.mp4', contentType: 'video/mp4' };
+  }
+
+  // WebM: 1A 45 DF A3
+  if (bytes[0] === 0x1A && bytes[1] === 0x45 && bytes[2] === 0xDF && bytes[3] === 0xA3) {
+    return { ext: '.webm', contentType: 'video/webm' };
+  }
+
+  return null;
+}
+
+/**
+ * Get file extension from content type
+ */
+function getExtensionFromContentType(contentType) {
+  // Remove charset and other parameters
+  const mimeType = contentType.split(';')[0].trim().toLowerCase();
+
+  const extensionMap = {
+    'image/jpeg': '.jpg',
+    'image/jpg': '.jpg',
+    'image/png': '.png',
+    'image/gif': '.gif',
+    'image/webp': '.webp',
+    'image/svg+xml': '.svg',
+    'video/mp4': '.mp4',
+    'video/webm': '.webm',
+    'video/quicktime': '.mov',
+  };
+
+  return extensionMap[mimeType] || '.bin';
+}
+
+/**
+ * Generate a unique filename for the media file with date-based path
+ * Format: /YYYY-MM-DD/tipname-hash.ext
+ */
+function generateFilename(originalUrl, tipFilename, buffer, contentType) {
+  const url = new URL(originalUrl);
+
+  // Priority 1: Detect from file content (magic bytes) - most reliable
+  const detected = detectFileTypeFromBuffer(buffer);
+  let ext;
+  if (detected) {
+    ext = detected.ext;
+  } else {
+    // Priority 2: Get from URL path extension
+    ext = path.extname(url.pathname).toLowerCase();
+    if (!ext) {
+      // Priority 3: Fallback to Content-Type header
+      ext = getExtensionFromContentType(contentType);
+    }
+  }
+
+  const tipName = path.basename(tipFilename, path.extname(tipFilename));
+  const hash = crypto.createHash('md5').update(originalUrl).digest('hex').substring(0, 8);
+
+  // Get current date for directory structure
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const dateDir = `${year}-${month}-${day}`;
+
+  return `${dateDir}/${tipName}-${hash}${ext}`;
+}
+
+/**
+ * Upload file to R2 using OpenDAL
+ */
+async function uploadToR2(operator, buffer, filename, contentType) {
+  // OpenDAL write method
+  await operator.write(filename, buffer);
+
+  return `${R2_PUBLIC_URL}/${filename}`;
+}
+
+/**
+ * Check if URL is already an R2 URL
+ */
+function isR2Url(url) {
+  if (!url) return false;
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname === new URL(R2_PUBLIC_URL).hostname;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Process a single tip file
+ */
+async function processFile(operator, filepath) {
+  const fullPath = path.join(process.cwd(), filepath);
+
+  console.log(`\nProcessing: ${filepath}`);
+
+  try {
+    const content = fs.readFileSync(fullPath, 'utf-8');
+    const { data: frontMatter, content: body } = matter(content);
+
+    // Check if mediaUrl exists and needs uploading
+    if (!frontMatter.mediaUrl) {
+      console.log('  ⏭️  No mediaUrl found');
+      return false;
+    }
+
+    if (isR2Url(frontMatter.mediaUrl)) {
+      console.log('  ⏭️  Already using R2 URL');
+      return false;
+    }
+
+    console.log(`  📥 Downloading: ${frontMatter.mediaUrl}`);
+    const { buffer, contentType } = await downloadFile(frontMatter.mediaUrl);
+
+    const filename = generateFilename(frontMatter.mediaUrl, filepath, buffer, contentType);
+
+    // Show detected file type
+    const detected = detectFileTypeFromBuffer(buffer);
+    const detectedType = detected ? `${detected.contentType} (detected)` : contentType;
+
+    console.log(`  📤 Uploading to R2: ${filename} (${(buffer.length / 1024).toFixed(2)} KB, ${detectedType})`);
+    const r2Url = await uploadToR2(operator, buffer, filename, contentType);
+
+    // Update frontmatter
+    const oldUrl = frontMatter.mediaUrl;
+    frontMatter.mediaUrl = r2Url;
+
+    // Write updated file
+    const newContent = matter.stringify(body, frontMatter);
+    fs.writeFileSync(fullPath, newContent, 'utf-8');
+
+    console.log(`  ✅ Updated mediaUrl:`);
+    console.log(`     Old: ${oldUrl}`);
+    console.log(`     New: ${r2Url}`);
+
+    return true;
+  } catch (error) {
+    console.error(`  ❌ Error: ${error.message}`);
+    throw error;
+  }
+}
+
+/**
+ * Main function
+ */
+async function main() {
+  console.log('🚀 Uploading media files to R2 with OpenDAL...\n');
+
+  // Validate environment
+  validateEnv();
+
+  // Get files from CLI arguments (passed after --)
+  const args = process.argv.slice(2);
+  const filesToProcess = args.filter(file => file.match(/tips\/.*\.(md|mdx)$/));
+
+  if (filesToProcess.length === 0) {
+    console.log('✅ No tip files to process');
+    process.exit(0);
+  }
+
+  console.log(`Found ${filesToProcess.length} file(s) to process`);
+
+  // Create OpenDAL operator for R2
+  const operator = createR2Operator();
+
+  let uploadedCount = 0;
+  const errors = [];
+
+  // Process each file
+  for (const file of filesToProcess) {
+    try {
+      const wasUploaded = await processFile(operator, file);
+      if (wasUploaded) {
+        uploadedCount++;
+      }
+    } catch (error) {
+      errors.push({ file, error: error.message });
+    }
+  }
+
+  // Summary
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`✅ Processed ${filesToProcess.length} file(s), uploaded ${uploadedCount} media file(s)`);
+
+  if (errors.length > 0) {
+    console.log(`\n❌ Errors encountered:`);
+    errors.forEach(({ file, error }) => {
+      console.log(`  - ${file}: ${error}`);
+    });
+    process.exit(1);
+  }
+
+  process.exit(0);
+}
+
+main();
