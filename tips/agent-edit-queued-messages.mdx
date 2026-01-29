@@ -1,0 +1,50 @@
+---
+title: Edit Queued Agent Messages Before Sending
+subtitle: Modify your queued prompts on the fly with Cmd+E
+category: ai
+difficulty: beginner
+tags:
+  - agent
+  - ai
+  - workflow
+  - editing
+author: danilo-leal
+authorUrl: 'https://github.com/danilo-leal'
+prUrl: 'https://github.com/zed-industries/zed/pull/47234'
+mediaType: video
+mediaUrl: 'https://github.com/user-attachments/assets/fb68fd48-c0cd-491f-a7d9-5065a9151b0b'
+---
+
+When you send multiple prompts to the agent while it's still processing, they get queued. Now you can **edit those queued messages** before they're sent - perfect for when you realize you want to refine your request.
+
+## How to Edit Queued Messages
+
+1. Send a message to the agent while it's processing another
+2. Your message gets added to the queue
+3. Press **Cmd+E** from the message editor
+4. The first queued message becomes editable
+5. Make your changes and:
+   - Press Enter to save changes (message stays queued)
+   - Click "Send Now" to send immediately
+   - Unfocus to keep editing later
+
+## Key Behaviors
+
+**Editing while processing**: If you're still editing when the queue reaches your message, it won't be sent automatically. You must explicitly click "Send Now."
+
+**Context preservation**: Queued messages show all context buttons and mentions just like regular messages, so you can see exactly what will be sent.
+
+**No layout shift**: The editor renders the same way whether editing or queued, making the experience smooth and predictable.
+
+## Why It's Useful
+
+- **Catch mistakes**: Fix typos or clarify instructions before the agent sees them
+- **Add context**: Include additional @-mentions or details you initially forgot
+- **Change direction**: Revise your approach based on the agent's current response
+- **Better workflow**: Queue multiple rough ideas, then polish them before sending
+
+This feature gives you complete control over your agent interactions, even when working at a fast pace!
+
+---
+
+**Related PR**: [#47234](https://github.com/zed-industries/zed/pull/47234)
