@@ -1,0 +1,81 @@
+---
+title: Inherit EditorConfig from Parent Directories
+subtitle: Apply editor settings from outside your project directory
+category: config
+difficulty: beginner
+tags:
+  - editorconfig
+  - configuration
+  - settings
+  - inheritance
+author: smitbarmase
+authorUrl: 'https://github.com/smitbarmase'
+prUrl: 'https://github.com/zed-industries/zed/pull/46332'
+publishedAt: '2026-01-29'
+updatedAt: '2026-01-29'
+---
+
+Zed now supports **EditorConfig inheritance** from parent directories. If you have organization-wide or machine-wide editor settings, place them in a parent directory and all nested projects will inherit them.
+
+## How It Works
+
+When Zed finds a `.editorconfig` file in your project, it also traverses **parent directories** up to the filesystem root looking for additional config files. Settings are applied in order:
+
+1. Furthest parent config (applied first)
+2. Closer parent configs (override)
+3. Project config (final override)
+
+## Example Setup
+
+```
+/Users/you/
+  .editorconfig         # Personal defaults
+  /company/
+    .editorconfig       # Company standards
+    /project-a/
+      .editorconfig     # Project-specific
+    /project-b/
+      .editorconfig     # Project-specific
+```
+
+In this setup:
+- `project-a` inherits from `/company/.editorconfig` and `/Users/you/.editorconfig`
+- Project configs override company configs
+- Company configs override personal configs
+
+## Stopping Inheritance
+
+Use `root = true` in any `.editorconfig` to stop looking in parent directories:
+
+```ini
+# /company/.editorconfig
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+```
+
+Now projects under `/company/` won't inherit from `/Users/you/.editorconfig`.
+
+## Common Use Cases
+
+**Organization standards**: Put company coding style in a parent directory shared by all projects.
+
+**Machine-wide defaults**: Set your personal preferences once at `~/.editorconfig` for all projects.
+
+**Monorepo configurations**: Have workspace-level settings with package-level overrides.
+
+**Team consistency**: Ensure everyone inherits the same base settings, with project-specific tweaks.
+
+## How External Configs Are Loaded
+
+- **Local projects**: File watchers detect changes immediately
+- **Remote/SSH projects**: Configs are sent to remote clients
+- **Collab/sharing**: External configs are shared with guests
+
+Perfect for teams that want consistent editor settings across multiple projects without duplicating config files!
+
+---
+
+**Related PR**: [#46332](https://github.com/zed-industries/zed/pull/46332)

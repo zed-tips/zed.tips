@@ -1,0 +1,73 @@
+---
+title: Navigate Code with Vim Tag Stack
+subtitle: Jump through definition history with dedicated tag navigation commands
+category: shortcuts
+difficulty: intermediate
+tags:
+  - vim
+  - navigation
+  - go-to-definition
+  - workflow
+author: zenazn
+authorUrl: 'https://github.com/zenazn'
+prUrl: 'https://github.com/zed-industries/zed/pull/46002'
+publishedAt: '2026-01-29'
+updatedAt: '2026-01-29'
+---
+
+Vim users rejoice! Zed now supports **tag stack navigation** - a dedicated history for "Go to Definition" jumps. Instead of mixing definition jumps with your regular navigation history, they're tracked in a separate stack.
+
+## How It Works
+
+Every time you use "Go to Definition" (or hover links), Zed records:
+- **Origin**: Where you jumped from
+- **Target**: Where you jumped to
+
+These are stored in a separate tag stack, independent of your regular back/forward history.
+
+## Navigation Commands
+
+Use these new commands to navigate the tag stack:
+
+- **`pane: go to older tag`** - Jump back through definition history
+- **`pane: go to newer tag`** - Jump forward through definition history
+
+## Why It's Better Than Browser History
+
+**Traditional browser-style history**: When you go back, you wade through every cursor movement, search, and file switch.
+
+**Tag stack**: Only tracks definition jumps, so going back takes you directly to where you started the investigation - not through every intermediate step.
+
+## Example Workflow
+
+```
+1. Working in app.tsx (origin)
+2. Cmd+Click on UserService.login() → jumps to service.ts
+3. Cmd+Click on authenticate() → jumps to auth.ts
+4. Cmd+Click on validateToken() → jumps to token.ts
+
+Now use "go to older tag":
+- First press → back to auth.ts
+- Second press → back to service.ts
+- Third press → back to app.tsx (your original location)
+```
+
+## Recommended Keybindings
+
+For Vim users, consider mapping to traditional Vim tag bindings:
+
+```json
+{
+  "context": "VimControl && !menu",
+  "bindings": {
+    "ctrl-]": "editor::GoToDefinition",
+    "ctrl-t": "pane::GoToOlderTag"
+  }
+}
+```
+
+This brings familiar Vim tag navigation to Zed!
+
+---
+
+**Related PR**: [#46002](https://github.com/zed-industries/zed/pull/46002)
