@@ -34,3 +34,8 @@
   icon: 🔀
   iconName: badge-check
   order: 7
+- id: vim
+  title: Vim & Modal Editing
+  icon: ⌨️
+  iconName: keyboard
+  order: 8

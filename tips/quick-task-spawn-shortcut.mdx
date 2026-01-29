@@ -1,0 +1,128 @@
+---
+title: Launch Tasks Instantly with Alt-Shift-R
+subtitle: One keystroke to open and execute your custom tasks
+category: productivity
+difficulty: beginner
+tags:
+  - tasks
+  - shortcuts
+  - workflow
+  - productivity
+mediaType: video
+mediaUrl: 'https://cat.zed.tips/2026-01-29/quick-task-spawn-for-zed.mp4'
+---
+
+Running custom tasks is one of Zed's most powerful features. With **Alt-Shift-R**, you can instantly open the task picker and execute any of your configured tasks with a single keystroke.
+
+## Why This Shortcut Matters
+
+**Speed**: Skip the command palette - go directly to task execution.
+
+**Workflow efficiency**: Build → Test → Deploy workflows become muscle memory.
+
+**Context awareness**: Zed shows tasks relevant to your current project.
+
+**Repeatability**: Execute the same task repeatedly during development.
+
+## Setup
+
+Add this to your `keymap.json`:
+
+```json
+{
+  "context": "Workspace",
+  "bindings": {
+    "alt-shift-r": ["task::Spawn", {}]
+  }
+}
+```
+
+## What Are Tasks?
+
+Tasks in Zed are custom commands you define in `.zed/tasks.json`. They can be:
+- Build commands (`npm run build`, `cargo build`)
+- Test runners (`npm test`, `pytest`)
+- Linters and formatters (`eslint .`, `cargo fmt`)
+- Custom scripts specific to your project
+- Multi-step workflows
+
+## Example Tasks Configuration
+
+Create `.zed/tasks.json` in your project:
+
+```json
+[
+  {
+    "label": "Run Tests",
+    "command": "npm test",
+    "tags": ["test"]
+  },
+  {
+    "label": "Build Production",
+    "command": "npm run build",
+    "tags": ["build"]
+  },
+  {
+    "label": "Lint & Format",
+    "command": "npm run lint && npm run format",
+    "tags": ["lint"]
+  },
+  {
+    "label": "Start Dev Server",
+    "command": "npm run dev",
+    "tags": ["dev"]
+  }
+]
+```
+
+## Workflow Example
+
+```
+1. Writing code in editor...
+2. Press Alt-Shift-R
+3. Task picker appears
+4. Type "test" → selects "Run Tests"
+5. Press Enter
+6. Tests run in integrated terminal
+7. Continue coding
+8. Press Alt-Shift-R → "build" → Enter
+9. Production build completes
+```
+
+## Advanced Usage
+
+**Task with arguments**: Some tasks can accept dynamic input.
+
+**Task variables**: Use `$ZED_FILE`, `$ZED_DIRNAME`, etc. in your commands.
+
+**Task tags**: Filter tasks by tags for quick access.
+
+**Task history**: Recently used tasks appear at the top.
+
+## Pro Tips
+
+- Create task templates for common workflows (test → build → deploy)
+- Use descriptive labels - they're searchable in the picker
+- Combine with `space tab` to quickly switch back to your last buffer after task execution
+- Tasks run in a persistent terminal, so you can see output history
+- Group related tasks with tags for easier filtering
+
+## Why Alt-Shift-R?
+
+**R** = Run/Runner - mnemonic for executing tasks
+
+**Alt-Shift** = Modifier combination easy to hit with one hand
+
+**Non-conflicting**: Doesn't interfere with common Vim or editor shortcuts
+
+**Debugger alternative**: Some users also map this to `debugger::Start` for a unified "run" experience
+
+## Integration with Development Workflow
+
+This shortcut shines when combined with:
+- Hot reload workflows (start dev server, make changes, auto-refresh)
+- TDD cycles (write test, run test, write code, run test)
+- Pre-commit checks (lint, format, test before committing)
+- CI/CD simulation (run the same commands locally that run in CI)
+
+Once you configure your project's tasks and memorize Alt-Shift-R, running builds, tests, and scripts becomes effortless!
