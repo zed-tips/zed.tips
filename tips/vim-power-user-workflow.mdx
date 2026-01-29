@@ -1,0 +1,243 @@
+---
+title: Build a Complete Vim Power User Workflow in Zed
+subtitle: >-
+  Master keyboard-driven editing with leader keys, motions, and efficient
+  navigation
+category: vim
+difficulty: intermediate
+tags:
+  - vim
+  - workflow
+  - keybindings
+  - productivity
+  - navigation
+  - leader-key
+publishedAt: '2026-01-29'
+updatedAt: '2026-01-29'
+author: godruoyi
+authorUrl: 'https://github.com/godruoyi'
+---
+
+Transform Zed into a Vim power user's dream with this comprehensive workflow setup. This guide covers everything from escaping insert mode to building a complete leader key system.
+
+## 🚀 Quick Escape from Insert Mode
+
+The first optimization every Vim user makes: map `jj` or `jk` to escape insert mode.
+
+```json
+{
+  "context": "Editor && vim_mode == insert && !menu",
+  "bindings": {
+    "j j": "vim::NormalBefore",
+    "j k": "vim::NormalBefore"
+  }
+}
+```
+
+**Why it matters**: Keep fingers on home row instead of reaching for ESC. Both `jj` and `jk` work - choose based on preference.
+
+## 🗺️ Space as Leader Key System
+
+Build a discoverable, organized keybinding system with Space as your leader. Group commands by category for easy memorization.
+
+```json
+{
+  "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+  "bindings": {
+    // Git Operations (space g)
+    "space g h d": "editor::ToggleSelectedDiffHunks",
+    "space g s": "git_panel::ToggleFocus",
+    "space g b": "git::Branch",
+
+    // File & Project (space e/f)
+    "space e": "project_panel::ToggleFocus",
+    "space f p": "projects::OpenRecent",
+
+    // Search & Symbols (space s)
+    "space s w": "pane::DeploySearch",
+    "space s s": "outline::Toggle",
+    "space s S": "project_symbols::Toggle",
+
+    // Buffer Management (space b)
+    "space b b": "pane::ActivateLastItem",
+    "space b a": "pane::CloseAllItems",
+    "space tab": "pane::ActivateLastItem",
+    "space q": "pane::CloseActiveItem",
+
+    // AI & Diagnostics (space a/x)
+    "space a": "agent::ToggleFocus",
+    "space x x": "diagnostics::Deploy",
+
+    // UI Toggles (space t/c/z)
+    "space t i": "editor::ToggleInlayHints",
+    "space c z": "workspace::ToggleCenteredLayout",
+    "space z z": "workspace::ToggleZoom"
+  }
+}
+```
+
+**Organization principles**:
+- Two-letter prefixes for categories (g=git, s=search, b=buffers)
+- Mnemonic choices make commands memorable
+- Repeating letters for toggles (`space z z` for zoom)
+
+## 🎯 Vim Sneak for Precise Navigation
+
+Jump to any visible text with two-character searches - faster than `/` and more accurate than `f/t`.
+
+```json
+{
+  "context": "vim_mode == normal || vim_mode == visual",
+  "bindings": {
+    "s": "vim::PushSneak",
+    "S": "vim::PushSneakBackward"
+  }
+}
+```
+
+**Usage**: Type `s` followed by two characters to jump forward. Works with operators too: `d s fu` deletes from cursor to "fu".
+
+## ⬅️➡️ Ergonomic History Navigation
+
+Replace awkward bracket navigation with intuitive Backspace/Enter keys.
+
+```json
+{
+  "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+  "bindings": {
+    "backspace": "pane::GoBack",
+    "enter": "pane::GoForward",
+    "shift-backspace": "pane::GoToOlderTag",
+    "shift-enter": "pane::GoToNewerTag"
+  }
+}
+```
+
+**Two-tier navigation**:
+- **Backspace/Enter**: Regular history (all cursor movements)
+- **Shift-Backspace/Enter**: Tag stack (only "Go to Definition" jumps)
+
+## 📑 Browser-Style Buffer Switching
+
+Navigate between open files with `H` and `L` - like browser tabs but on the home row.
+
+```json
+{
+  "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+  "bindings": {
+    "H": "pane::ActivatePreviousItem",
+    "L": "pane::ActivateNextItem"
+  }
+}
+```
+
+**Workflow**: `L` to move right through tabs, `H` to move left. Combine with `space b b` to toggle between last two files.
+
+## 🎨 Complete Configuration Example
+
+Here's a full `keymap.json` combining all these patterns:
+
+```json
+[
+  {
+    "context": "Editor && vim_mode == insert && !menu",
+    "bindings": {
+      "j j": "vim::NormalBefore",
+      "j k": "vim::NormalBefore"
+    }
+  },
+  {
+    "context": "vim_mode == normal || vim_mode == visual",
+    "bindings": {
+      "s": "vim::PushSneak",
+      "S": "vim::PushSneakBackward"
+    }
+  },
+  {
+    "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+    "bindings": {
+      // Navigation
+      "backspace": "pane::GoBack",
+      "enter": "pane::GoForward",
+      "shift-backspace": "pane::GoToOlderTag",
+      "shift-enter": "pane::GoToNewerTag",
+      "H": "pane::ActivatePreviousItem",
+      "L": "pane::ActivateNextItem",
+
+      // Git workflow
+      "space g h d": "editor::ToggleSelectedDiffHunks",
+      "space g s": "git_panel::ToggleFocus",
+      "space g b": "git::Branch",
+
+      // Project & Files
+      "space e": "project_panel::ToggleFocus",
+      "space f p": "projects::OpenRecent",
+
+      // Search
+      "space s w": "pane::DeploySearch",
+      "space s s": "outline::Toggle",
+      "space s S": "project_symbols::Toggle",
+
+      // Buffers
+      "space b b": "pane::ActivateLastItem",
+      "space tab": "pane::ActivateLastItem",
+      "space q": "pane::CloseActiveItem",
+
+      // AI & Tools
+      "space a": "agent::ToggleFocus",
+      "space x x": "diagnostics::Deploy",
+
+      // UI
+      "space t i": "editor::ToggleInlayHints",
+      "space z z": "workspace::ToggleZoom"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
+    "bindings": {
+      "space .": "editor::ToggleCodeActions",
+      "space c r": "editor::Rename",
+      "g d": "editor::GoToDefinition",
+      "g D": "editor::GoToDefinitionSplit",
+      "g i": "editor::GoToImplementation",
+      "g t": "editor::GoToTypeDefinition",
+      "g r": "editor::FindAllReferences",
+      "] d": "editor::GoToDiagnostic",
+      "[ d": "editor::GoToPreviousDiagnostic"
+    }
+  }
+]
+```
+
+## 💡 Pro Tips
+
+**Muscle Memory**: Practice one category at a time. Start with Git (`space g`), then add Search (`space s`), etc.
+
+**Consistency**: Keep similar actions across categories (e.g., `space x x` for diagnostics, `space z z` for zoom).
+
+**Documentation**: Add comments in your config to remember less-used bindings.
+
+**Integration**: These bindings work together - use `space g s` to open Git panel, then `backspace` to return to editing.
+
+**Customization**: This is a starting point. Add your own categories and commands based on your workflow.
+
+## 🚀 Workflow Examples
+
+**Code Review**:
+1. `space g h d` → View inline diffs
+2. Make changes
+3. `space g s` → Open Git panel
+4. Stage and commit
+
+**Navigation**:
+1. `g d` → Go to definition
+2. Explore code
+3. `shift-backspace` → Jump back to origin
+4. `H` / `L` → Switch between related files
+
+**Search & Replace**:
+1. `space s w` → Search for word under cursor
+2. Review results
+3. `backspace` → Return to original location
+
+This configuration transforms Zed into a keyboard-centric powerhouse for Vim users. Every action is optimized for speed and ergonomics!
