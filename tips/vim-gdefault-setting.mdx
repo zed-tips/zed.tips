@@ -1,0 +1,66 @@
+---
+title: Vim Global Substitution Default
+subtitle: Make /g the default for substitute commands with vim.gdefault
+category: vim
+difficulty: intermediate
+tags:
+  - vim
+  - substitution
+  - settings
+prUrl: 'https://github.com/zed-industries/zed/pull/47664'
+publishedAt: '2026-02-05'
+updatedAt: '2026-02-05'
+author: godruoyi
+authorUrl: 'https://github.com/godruoyi'
+---
+
+Enable **vim.gdefault** to make `/g` (replace all matches in a line) the default behavior for Vim substitute commands, eliminating the need to type `/g` every time.
+
+## How It Works
+
+With `vim.gdefault` enabled, the `/g` flag behavior is inverted:
+
+| Command | gdefault ON | gdefault OFF |
+|---------|-------------|--------------|
+| `:s///` | Replace all | Replace one |
+| `:s///g` | Replace one | Replace all |
+| `:s///gg` | Replace all | Replace one |
+
+## Configuration
+
+Add to your `settings.json`:
+
+```json
+{
+  "vim": {
+    "gdefault": true
+  }
+}
+```
+
+Or use Vim commands in editor:
+- `:set gdefault` (short: `:set gd`) - Enable
+- `:set nogdefault` (short: `:set nogd`) - Disable
+
+## Why This Matters
+
+**Efficiency**: Most substitutions replace all matches - make it the default.
+
+**Muscle memory**: If you're used to Vim with `gdefault`, maintain your workflow.
+
+**Less typing**: Skip `/g` on every substitute command.
+
+## Example
+
+Without gdefault:
+```vim
+:s/foo/bar/g   " Need /g to replace all
+```
+
+With gdefault:
+```vim
+:s/foo/bar     " Replaces all by default
+:s/foo/bar/g   " Add /g to replace only first match
+```
+
+This setting is especially useful for users transitioning from Vim/Neovim where they've relied on `gdefault` for years.
