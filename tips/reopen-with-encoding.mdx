@@ -1,0 +1,53 @@
+---
+title: Reopen Files with Different Encoding
+subtitle: Fix garbled text by selecting the correct encoding from status bar
+category: productivity
+difficulty: beginner
+tags:
+  - encoding
+  - files
+  - internationalization
+prUrl: https://github.com/zed-industries/zed/pull/46553
+---
+
+Fix **garbled text** caused by incorrect encoding detection by using the "Reopen with Encoding" feature. Select from Shift JIS, EUC-JP, UTF-16LE, and other encodings to properly display your files.
+
+## How to Use
+
+**Via Status Bar (Click):**
+1. Click the encoding indicator in the status bar (e.g., "UTF-8")
+2. Select desired encoding from the picker
+3. File reloads with the new encoding
+
+**Via Keyboard Shortcut:**
+- macOS: `Cmd-K N`
+- Linux/Windows: `Ctrl-K N`
+
+**Via Command Palette:**
+- Search for "Reopen with Encoding"
+
+## Available Encodings
+
+The picker includes common encodings:
+- UTF-8, UTF-16LE, UTF-16BE
+- Shift JIS (Japanese)
+- EUC-JP (Japanese)
+- GB2312, GBK (Chinese)
+- And many more...
+
+## Why This Matters
+
+**Fix mojibake**: Resolve garbled characters in legacy files.
+
+**International files**: Properly display files created with different system encodings.
+
+**BOM handling**: Automatically handles byte order marks (BOM) when switching encodings.
+
+## Limitations
+
+Currently works for **local files only**. The feature is disabled when:
+- In collaboration sessions (shared projects)
+- Connected to remote servers (SSH/WSL)
+- File has unsaved changes (to prevent data loss)
+
+When switching back to UTF-8, BOMs are properly detected and consumed to restore original file state.

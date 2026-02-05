@@ -1,0 +1,55 @@
+---
+title: Vim Relative Line Jumping
+subtitle: Jump to lines relative to cursor position with +/- syntax
+category: vim
+difficulty: intermediate
+tags:
+  - vim
+  - navigation
+  - shortcuts
+prUrl: https://github.com/zed-industries/zed/pull/46932
+mediaType: video
+mediaUrl: https://github.com/user-attachments/assets/395c0e7b-8ac1-48c8-a39e-5ade4f9206ec
+---
+
+The go-to-line action now supports **relative line jumping**, allowing you to jump to lines relative to your current cursor position using Vim/Neovim syntax.
+
+## Supported Syntax
+
+When using go-to-line with relative mode enabled:
+
+- `5` → jump 5 lines down
+- `-3` or `b3` → jump 3 lines up
+- `+10` or `f10` → jump 10 lines forward
+- `0` → stay on current line
+
+Both `-` and `b` work for backward jumps, `+` and `f` for forward jumps.
+
+## Setup
+
+Add a keybinding to your `keymap.json`:
+
+```json
+{
+  "context": "VimControl && !menu",
+  "bindings": {
+    "ctrl-j": ["go_to_line::Toggle", {"relative": true}]
+  }
+}
+```
+
+## How to Use
+
+1. Press your configured keybinding (e.g., `Ctrl-J`)
+2. Type the relative line number (`5`, `-3`, `b10`, etc.)
+3. Press Enter to jump
+
+## Why This Matters
+
+**Vim familiarity**: Matches Vim/Neovim's relative line jump behavior.
+
+**Efficient navigation**: Jump to nearby lines without calculating absolute line numbers.
+
+**Visual mode friendly**: Works with relative line numbers display for quick jumps.
+
+Perfect for Vim users who rely on relative line numbers and want fast vertical navigation.

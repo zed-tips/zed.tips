@@ -1,0 +1,44 @@
+---
+title: Hot-Exit for Empty Workspaces
+subtitle: Unsaved files in empty workspaces now restore on startup
+category: productivity
+difficulty: beginner
+tags:
+  - workspace
+  - autosave
+  - workflow
+prUrl: https://github.com/zed-industries/zed/pull/46557
+---
+
+Empty workspaces (without folders) now support **hot-exit**, automatically restoring unsaved files like drafts and single files when you restart Zed.
+
+## What This Means
+
+Previously, closing Zed with unsaved files in an empty workspace would lose those files. Now they're preserved and restored on next launch.
+
+**Protected content:**
+- Unsaved draft files
+- Single files opened without a project folder
+- Scratch buffers with content
+
+Empty workspaces are identified by `workspace_id` rather than file paths, allowing multiple empty workspaces to coexist and restore independently.
+
+## How It Works
+
+No configuration needed - hot-exit is automatic:
+
+1. Open Zed without a project folder
+2. Create or edit files without saving
+3. Close Zed
+4. Reopen Zed
+5. Your unsaved work is restored
+
+## Why This Matters
+
+**No lost work**: Close Zed confidently knowing unsaved files will return.
+
+**Scratch workflow**: Use Zed for quick notes and drafts without worrying about saving.
+
+**Session continuity**: Pick up exactly where you left off, even in empty workspaces.
+
+Perfect for users who frequently work with single files or use Zed as a quick scratchpad without opening project folders.
