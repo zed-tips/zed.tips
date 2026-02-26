@@ -1,0 +1,39 @@
+---
+title: Sticky Diff Hunk Controls Stay Visible
+subtitle: Keep diff controls accessible even when viewing large changes
+category: git
+difficulty: beginner
+tags:
+  - git
+  - diff
+  - ui
+  - productivity
+prUrl: 'https://github.com/zed-industries/zed/pull/49260'
+publishedAt: '2026-02-26'
+updatedAt: '2026-02-26'
+author: godruoyi
+authorUrl: 'https://github.com/godruoyi'
+---
+
+When reviewing large diffs, the controls for staging, discarding, or reverting hunks now stick to the top of your viewport, ensuring they're always accessible as you scroll through changes.
+
+## How It Works
+
+Sticky controls activate automatically:
+
+1. Open a file with Git changes
+2. Scroll down through a long diff hunk
+3. When the top of the hunk scrolls off-screen, the controls stick to the viewport top
+4. You can always access hunk actions without scrolling back up
+
+No configuration needed—this works automatically for all diff hunks.
+
+## Why This Matters
+
+**Reduced Scrolling**: Stage or discard hunks without scrolling to the top.
+
+**Better Large Diffs**: Review extensive changes without losing access to controls.
+
+**Faster Workflow**: Make decisions about changes right where you are in the code.
+
+This is especially useful when reviewing substantial changes, like refactoring or feature additions, where diff hunks span many screens and you need quick access to staging controls while examining the full context of the changes.

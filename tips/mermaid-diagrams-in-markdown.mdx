@@ -1,0 +1,51 @@
+---
+title: Render Mermaid Diagrams in Markdown Preview
+subtitle: 'Visualize flowcharts, sequences, and diagrams directly in your markdown files'
+category: productivity
+difficulty: beginner
+tags:
+  - markdown
+  - diagrams
+  - documentation
+  - preview
+prUrl: 'https://github.com/zed-industries/zed/pull/49064'
+mediaType: image
+mediaUrl: 'https://cat.zed.tips/2026-02-26/mermaid-diagrams-in-markdown-e3432c24.png'
+publishedAt: '2026-02-26'
+updatedAt: '2026-02-26'
+author: godruoyi
+authorUrl: 'https://github.com/godruoyi'
+---
+
+Mermaid diagrams now render beautifully in Zed's markdown preview panel, letting you create flowcharts, sequence diagrams, and more using simple text syntax.
+
+## How to Use
+
+1. Open a markdown file in Zed
+2. Add a mermaid code block with your diagram syntax:
+
+```markdown
+\`\`\`mermaid
+graph TD
+    A[Start] --> B{Decision}
+    B -->|Yes| C[Action 1]
+    B -->|No| D[Action 2]
+\`\`\`
+```
+
+3. Open the markdown preview panel
+4. Your diagram renders automatically
+
+Mermaid supports flowcharts, sequence diagrams, class diagrams, state diagrams, and more.
+
+## Why This Matters
+
+**Visual Documentation**: Turn text into diagrams without external tools.
+
+**Version Control**: Diagrams live in markdown, trackable in Git like code.
+
+**No Context Switching**: View and edit diagrams without leaving Zed.
+
+**Always Up-to-Date**: Diagrams are rendered on-demand, so they stay fresh as you edit.
+
+This is perfect for architecture documentation, workflow diagrams, and any technical documentation that benefits from visual representation.

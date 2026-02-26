@@ -1,0 +1,37 @@
+---
+title: Agent Threads Survive Editor Restarts
+subtitle: Your AI conversations now persist across Zed sessions automatically
+category: ai
+difficulty: beginner
+tags:
+  - agent
+  - persistence
+  - workflow
+prUrl: 'https://github.com/zed-industries/zed/pull/48800'
+publishedAt: '2026-02-26'
+updatedAt: '2026-02-26'
+author: godruoyi
+authorUrl: 'https://github.com/godruoyi'
+---
+
+Previously, restarting Zed meant losing your agent conversation threads, forcing you to start fresh every time. Now, your agent panel state is automatically restored when you reopen your workspace.
+
+## How It Works
+
+Agent panel restoration happens automatically:
+
+1. When you close Zed, your current agent threads are saved
+2. When you reopen the same workspace, your threads are restored
+3. Your conversation history, context, and thread state persist
+
+No configuration needed—it just works.
+
+## Why This Matters
+
+**Continuity**: Pick up exactly where you left off without losing context.
+
+**Workflow Integration**: Agent threads are now part of your workspace, just like open files and panels.
+
+**Reduced Friction**: No more recreating conversations or re-explaining context after restarts.
+
+This is especially valuable for long-running coding sessions where you might need to restart Zed for updates or system maintenance.
