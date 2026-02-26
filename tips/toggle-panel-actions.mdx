@@ -1,0 +1,58 @@
+---
+title: Toggle Any Panel with Dedicated Actions
+subtitle: New toggle commands for every panel make custom keybindings easier
+category: shortcuts
+difficulty: beginner
+tags:
+  - panels
+  - keybindings
+  - workflow
+  - ui
+prUrl: 'https://github.com/zed-industries/zed/pull/49395'
+---
+
+Every panel in Zed now has a dedicated toggle action, making it simple to show or hide panels with custom keybindings.
+
+## How to Use
+
+Use the command palette to toggle any panel:
+
+1. Open the command palette (**`Cmd-Shift-P`** on macOS, **`Ctrl-Shift-P`** on Linux/Windows)
+2. Search for "toggle" to see all panel toggle actions
+3. Choose a panel to toggle its visibility
+
+Or create custom keybindings in your keymap settings:
+
+```json
+[
+  {
+    "bindings": {
+      "cmd-1": "workspace::ToggleLeftPanel",
+      "cmd-2": "project_panel::Toggle",
+      "cmd-3": "outline_panel::Toggle"
+    }
+  }
+]
+```
+
+## Available Toggle Actions
+
+All panels now have toggle actions:
+- `project_panel::Toggle`
+- `outline_panel::Toggle`
+- `git_panel::Toggle`
+- `agent_panel::Toggle`
+- `terminal_panel::Toggle`
+- `collab_panel::Toggle`
+- `notification_panel::Toggle`
+- `debugger_ui::Toggle`
+
+## Why This Matters
+
+**Consistent API**: Every panel works the same way for toggling.
+
+**Custom Workflows**: Bind your most-used panels to quick shortcuts.
+
+**Keyboard-First**: Navigate your workspace without touching the mouse.
+
+This is perfect for creating a personalized workspace layout where you can instantly access the panels you need while keeping others hidden until necessary.
