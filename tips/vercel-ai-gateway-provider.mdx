@@ -1,0 +1,71 @@
+---
+title: Use Vercel AI Gateway as LLM Provider
+subtitle: Connect to multiple AI models through Vercel's unified AI Gateway
+category: ai
+difficulty: intermediate
+tags:
+  - ai
+  - providers
+  - vercel
+  - configuration
+prUrl: 'https://github.com/zed-industries/zed/pull/50207'
+publishedAt: '2026-03-16'
+updatedAt: '2026-03-16'
+author: godruoyi
+authorUrl: 'https://github.com/godruoyi'
+---
+
+Zed now supports Vercel AI Gateway as a language model provider, giving you access to multiple AI models through Vercel's unified gateway interface.
+
+## What is Vercel AI Gateway?
+
+Vercel AI Gateway is a service that provides a single API endpoint for multiple AI model providers. Instead of configuring each provider separately, you connect to the gateway which handles routing to different models.
+
+## How to Configure
+
+Add to your settings.json:
+
+```json
+{
+  "language_models": {
+    "vercel_ai_gateway": {
+      "available_models": [
+        {
+          "name": "gpt-4",
+          "provider": "openai"
+        }
+      ]
+    }
+  }
+}
+```
+
+Then authenticate with your Vercel AI Gateway credentials when prompted.
+
+## Why Use AI Gateway?
+
+**Unified access**: Connect to multiple model providers through one endpoint.
+
+**Cost tracking**: Centralized usage monitoring and billing.
+
+**Rate limiting**: Built-in rate limit management across providers.
+
+**Model switching**: Easily switch between different AI models.
+
+**Enterprise features**: Advanced logging, caching, and fallback handling.
+
+## Supported Capabilities
+
+The provider automatically detects model capabilities from tags:
+- Tool use (function calling)
+- Vision (image understanding)
+- Streaming responses
+
+Models are configured with their supported parameters based on the underlying provider.
+
+## Use Cases
+
+- Teams using Vercel's infrastructure for unified AI model access
+- Projects requiring multi-model support with centralized management
+- Organizations needing detailed usage analytics and cost attribution
+- Developers who want simplified configuration for multiple AI providers

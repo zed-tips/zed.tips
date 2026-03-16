@@ -1,0 +1,56 @@
+---
+title: Use REPL with WSL and SSH Remote Kernels
+subtitle: Run Jupyter kernels on remote machines or WSL environments
+category: productivity
+difficulty: intermediate
+tags:
+  - repl
+  - remote
+  - wsl
+  - jupyter
+prUrl: 'https://github.com/zed-industries/zed/pull/47891'
+publishedAt: '2026-03-16'
+updatedAt: '2026-03-16'
+author: godruoyi
+authorUrl: 'https://github.com/godruoyi'
+---
+
+The REPL now supports running Jupyter kernels on WSL (Windows Subsystem for Linux) and SSH remote machines, letting you execute code in remote environments directly from Zed.
+
+## What Are Remote Kernels?
+
+Remote kernels allow you to run notebook code on a different machine or environment than where Zed is running. This is useful for:
+- Using powerful remote servers for computations
+- Running code in Linux environments from Windows via WSL
+- Accessing GPU resources on remote machines
+- Working with specific environments or dependencies
+
+## How to Use
+
+1. Open a notebook file (`.ipynb`) in Zed
+2. Click the kernel selector in the REPL interface
+3. Choose from available kernel options:
+   - **Local kernels**: Run on your machine
+   - **WSL kernels**: Run in Windows Subsystem for Linux
+   - **SSH kernels**: Run on remote SSH servers
+4. Select your desired kernel and start running code
+
+The kernel spawning and lifecycle management is handled automatically through the remote protocol.
+
+## Why This Matters
+
+**Remote computing**: Leverage powerful servers without leaving Zed.
+
+**Environment isolation**: Run code in specific environments (WSL, Docker, etc.).
+
+**Cross-platform**: Windows users can use Linux environments seamlessly.
+
+**Resource access**: Connect to machines with GPUs, large datasets, or specific software.
+
+## Requirements
+
+- **WSL**: Windows Subsystem for Linux must be installed and configured
+- **SSH**: SSH access to remote machines with Jupyter kernels installed
+- **Kernels**: Target environment must have required Jupyter kernels available
+
+This feature integrates with Zed's existing remote development capabilities, bringing the full power of remote computing to notebook workflows.
