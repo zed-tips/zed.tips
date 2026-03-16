@@ -1,0 +1,49 @@
+---
+title: See Addition and Deletion Counts in Git Panel
+subtitle: View file-level diff statistics showing lines added and removed
+category: git
+difficulty: beginner
+tags:
+  - git
+  - diff
+  - statistics
+  - ui
+prUrl: 'https://github.com/zed-industries/zed/pull/49519'
+mediaType: image
+mediaUrl: 'https://github.com/user-attachments/assets/73257854-6168-4d12-84f8-27c9e0abe89f'
+---
+
+The git panel now displays diff statistics for each modified file, showing you exactly how many lines were added and removed without opening the file.
+
+## How to Enable
+
+1. Open Settings (**`Cmd-,`** on macOS)
+2. Search for **git_panel**
+3. Find the **diff_stats** option and enable it
+4. Addition and deletion counts appear next to each file in the git panel
+
+The counts are shown as colored numbers: green for additions, red for deletions.
+
+## Why This Matters
+
+**Quick assessment**: Gauge the scope of changes at a glance.
+
+**Review planning**: Prioritize which files to review based on change size.
+
+**Spot outliers**: Identify unexpectedly large changes that might need extra attention.
+
+**Context awareness**: Understand the impact of commits before viewing detailed diffs.
+
+## Configuration
+
+Add to your settings.json:
+
+```json
+{
+  "git_panel": {
+    "diff_stats": true
+  }
+}
+```
+
+The setting is disabled by default to keep the git panel minimal, but enabling it provides valuable context for code review and commit planning.

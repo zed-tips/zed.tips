@@ -1,0 +1,44 @@
+---
+title: Jump to Last Pane with Keybinding
+subtitle: Add a keyboard shortcut to focus the rightmost pane instantly
+category: navigation
+difficulty: beginner
+tags:
+  - panes
+  - keybindings
+  - navigation
+  - workflow
+prUrl: 'https://github.com/zed-industries/zed/pull/49853'
+---
+
+The new `workspace::ActivateLastPane` action lets you bind a keyboard shortcut that always focuses the rightmost pane, providing a predictable navigation target.
+
+## How to Use
+
+Add this to your keymap.json:
+
+```json
+{
+  "bindings": {
+    "cmd-9": "workspace::ActivateLastPane"
+  }
+}
+```
+
+Now pressing **`Cmd-9`** always jumps to the last (rightmost) pane in your current window.
+
+## Why This Matters
+
+**Predictable navigation**: Unlike numbered pane actions, this never creates new panes.
+
+**Stable target**: Always focuses the rightmost pane regardless of how many panes exist.
+
+**Complements existing shortcuts**: Works well with `Cmd-1` through `Cmd-8` for other panes.
+
+**No side effects**: Pure focus action - never splits or modifies your layout.
+
+## Comparison with ActivatePane
+
+`workspace::ActivatePane` with an index can create/split panes when the index doesn't exist. `ActivateLastPane` is focus-only and never modifies your pane layout.
+
+This is perfect for users who want a reliable "jump to rightmost pane" shortcut similar to terminal or browser tab navigation patterns.

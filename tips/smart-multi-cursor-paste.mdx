@@ -1,0 +1,54 @@
+---
+title: Smart Multi-Cursor Paste Distribution
+subtitle: Paste multiple lines to multiple cursors with automatic line-to-cursor mapping
+category: productivity
+difficulty: intermediate
+tags:
+  - multi-cursor
+  - clipboard
+  - editing
+  - workflow
+prUrl: 'https://github.com/zed-industries/zed/pull/48676'
+---
+
+When you have multiple cursors and paste content with the same number of lines, Zed now intelligently distributes each line to its corresponding cursor.
+
+## How It Works
+
+1. Create multiple cursors (e.g., 3 cursors)
+2. Copy content with the same number of lines (e.g., 3 lines)
+3. Paste with **`Cmd-V`**
+4. Each line goes to its matching cursor position
+
+**Example:**
+
+If you copy:
+```
+apple
+banana
+cherry
+```
+
+And paste with 3 cursors, you get:
+- Line 1 ("apple") → Cursor 1
+- Line 2 ("banana") → Cursor 2
+- Line 3 ("cherry") → Cursor 3
+
+## Why This Matters
+
+**Batch transformations**: Apply different values to multiple locations simultaneously.
+
+**Data entry**: Quickly distribute lists across multiple positions.
+
+**Refactoring**: Replace multiple items with different values in one paste.
+
+**Natural workflow**: Works intuitively when cursor and line counts match.
+
+If the line count doesn't match the cursor count, Zed falls back to the standard paste behavior (same content at each cursor).
+
+## Example Use Cases
+
+- Distributing different variable names to multiple function parameters
+- Pasting multiple import statements to different locations
+- Filling in template placeholders with different values
+- Renaming multiple similar elements with distinct names
