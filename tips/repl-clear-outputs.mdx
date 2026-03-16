@@ -1,0 +1,62 @@
+---
+title: Clear REPL Outputs with Commands
+subtitle: Remove cell outputs to declutter notebooks or start fresh
+category: productivity
+difficulty: beginner
+tags:
+  - repl
+  - notebook
+  - commands
+  - workflow
+prUrl: 'https://github.com/zed-industries/zed/pull/49631'
+---
+
+The REPL now includes commands to clear output from notebook cells, helping you declutter your workspace or prepare notebooks for sharing.
+
+## Available Commands
+
+Two new commands are available via the command palette:
+
+**`repl: Clear Current Output`**
+- Clears output from the currently selected cell
+- Useful for removing stale or unwanted results
+- Keeps the code intact
+
+**`repl: Clear Outputs`**
+- Clears outputs from all cells in the notebook
+- Perfect for cleaning up before committing
+- Resets the notebook to a clean state
+
+## How to Use
+
+1. Open a notebook file (`.ipynb`) in Zed
+2. Open the command palette (**`Cmd-Shift-P`**)
+3. Search for "clear output" or "clear outputs"
+4. Select the desired command
+
+You can also bind these commands to custom keybindings in your keymap.json.
+
+## Why This Matters
+
+**Clean commits**: Remove outputs before committing notebooks to version control.
+
+**Declutter workspace**: Remove large or distracting outputs while working.
+
+**Privacy**: Clear sensitive data from outputs before sharing.
+
+**Start fresh**: Reset all outputs when re-running entire notebooks.
+
+## Example Keybindings
+
+Add to your keymap.json:
+
+```json
+{
+  "bindings": {
+    "cmd-k cmd-o": "repl::ClearCurrentOutput",
+    "cmd-k shift-o": "repl::ClearOutputs"
+  }
+}
+```
+
+This feature addresses a common notebook workflow need that was previously missing from Zed's REPL interface.
